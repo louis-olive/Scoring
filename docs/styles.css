@@ -1,0 +1,14 @@
+/* Scrolling code blocks */
+.sourceCode {
+  scrollbar-width: thin;
+}
+
+/* Print-friendly */
+@media print {
+  .sidebar, .navbar, .page-footer {
+    display: none !important;
+  }
+  .main-content {
+    margin-left: 0 !important;
+  }
+}
