@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Scoring – M2 D3S/EGR 2025-2026 - 1. Scoring: Concepts and Vocabulary</title>
+<title>Scoring – M2 D3S/EGR 2026-2027 - 1. Scoring: Concepts and Vocabulary</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -170,21 +170,21 @@ div.csl-indent {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-case-study-(desbois" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
- <span class="menu-text">Case Study (Desbois)</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-case-study-(farm-holding" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Case Study (Farm Holding)</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-case-study-(desbois">    
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-case-study-(farm-holding">    
         <li>
-    <a class="dropdown-item" href="../case_study/1_data_and_eda_farm_holding.qmd" rel="" target="">
- <span class="dropdown-text"></span></a>
+    <a class="dropdown-item" href="../case_study/1_data_and_eda_farm_holding_wo_solution.html" rel="" target="">
+ <span class="dropdown-text">Case Study: Part 1: Farm Holding, EDA &amp; PCA as First Score</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../case_study/2_logreg_farm_holding.qmd" rel="" target="">
- <span class="dropdown-text"></span></a>
+    <a class="dropdown-item" href="../case_study/2_logreg_farm_holding_wo_solution.html" rel="" target="">
+ <span class="dropdown-text">2_logreg_farm_holding</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../case_study/3_trees_farm_holding.qmd" rel="" target="">
- <span class="dropdown-text"></span></a>
+    <a class="dropdown-item" href="../case_study/3_trees_farm_holding_wo_solution.html" rel="" target="">
+ <span class="dropdown-text">3_trees_farm_holding</span></a>
   </li>  
     </ul>
   </li>
@@ -226,6 +226,12 @@ div.csl-indent {
  <span class="menu-text">1. Scoring: Concepts and Vocabulary</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../case_study/1_data_and_eda_farm_holding_wo_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Study: Part 1: Farm Holding, EDA &amp; PCA as First Score</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -243,6 +249,12 @@ div.csl-indent {
  <span class="menu-text">2_logistic_regression</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../case_study/2_logreg_farm_holding_wo_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2_logreg_farm_holding</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -258,6 +270,12 @@ div.csl-indent {
   <div class="sidebar-item-container"> 
   <a href="../handouts/3_decision_trees.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">3_decision_trees</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../case_study/3_trees_farm_holding_wo_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3_trees_farm_holding</span></a>
   </div>
 </li>
       </ul>
@@ -290,7 +308,13 @@ div.csl-indent {
   <li><a href="#scoring-function-or-score" id="toc-scoring-function-or-score" class="nav-link" data-scroll-target="#scoring-function-or-score"><span class="header-section-number">3.1</span> Scoring function or Score</a></li>
   <li><a href="#performance" id="toc-performance" class="nav-link" data-scroll-target="#performance"><span class="header-section-number">3.2</span> Performance</a></li>
   </ul></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">4</span> References</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">4</span> Exercises</a>
+  <ul class="collapse">
+  <li><a href="#roc-curves" id="toc-roc-curves" class="nav-link" data-scroll-target="#roc-curves"><span class="header-section-number">4.1</span> ROC curves</a></li>
+  <li><a href="#bayes-classifier-exercise-11.9-cornillon2019" id="toc-bayes-classifier-exercise-11.9-cornillon2019" class="nav-link" data-scroll-target="#bayes-classifier-exercise-11.9-cornillon2019"><span class="header-section-number">4.2</span> Bayes classifier (Exercise 11.9 <span class="citation" data-cites="cornillon2019">Cornillon et al. (2019)</span>)</a></li>
+  <li><a href="#other-simulated-data-sets" id="toc-other-simulated-data-sets" class="nav-link" data-scroll-target="#other-simulated-data-sets"><span class="header-section-number">4.3</span> Other simulated data sets</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">5</span> References</a></li>
   </ul>
 </nav>
 </nav>
@@ -1588,8 +1612,110 @@ x(s)=P(S(X) \geq s|Y=0)=P(S(X))=P(S(X) \geq s|Y=1)=y(s)
 <p>Moreover these two methods can be combined, see for example this <a href="https://medium.com/criteo-engineering/unity-is-strength-a-story-of-model-composition-49748b1f1347">2020 blog post from Criteo engineering team on combining Logistic Regression and Decision Trees in production</a>.</p>
 </section>
 </section>
-<section id="references" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> References</h1>
+<section id="exercises" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Exercises</h1>
+<section id="roc-curves" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="roc-curves"><span class="header-section-number">4.1</span> ROC curves</h2>
+<p>Using the Mixture data set, plot ROC curves for some chosen classifiers:</p>
+<ul>
+<li>first by implementing from scratch a method for plotting ROC curves using the course definition:</li>
+</ul>
+<p>For a given threshold <span class="math inline">\(s\)</span> and passing as argument a column of outputs <span class="math inline">\(Y\)</span> together with a score column (i.e.&nbsp;predicted probabilities) define a function to obtain the False/True Positive Rates:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>roc_curve <span class="ot">&lt;-</span> <span class="cf">function</span>(s, error_rate){</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># error_rate is a tibble containing a column Y of true values and a column score </span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># let s be a threshold in R</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># YOUR CODE HERE</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">tibble</span>(<span class="at">threshold =</span> s, <span class="at">fpr =</span> false_positive_rate, <span class="at">tpr =</span> true_positive_rate))</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>First use this function to plot the ROC curve (passing a vector of thresholds <span class="math inline">\(s\)</span>) for a Logistic Regression classifier defined and fitted in the first section of the course:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Then use it to plot the ROC curve for a Logistic Regression classifier using predictors modified using splines:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Then use it to plot the ROC curve for a Logistic Regression classifier using discretized quantitative predictors (binning):</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>To finish show the ROC curve for a Decision Tree method:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Plot the ROC curves together:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ul>
+<li>Do the same using the <code>ROCR</code> package (see <code>ROCR_Talk_Tobias_Sing.ppt</code> in course repository for a presentation by its authors)</li>
+</ul>
+<p>The library <code>ROCR</code> needs to first build a <code>prediction</code> object using a column of outputs <span class="math inline">\(Y\)</span> together with a score column (i.e.&nbsp;predicted probabilities), then to build a <code>performance</code> object (for a ROC curve the arguments <code>measure = "tpr", x.measure = "fpr"</code> should be passed to <code>performance()</code> together with the <code>prediction</code> object / for the AUC the argument <code>measure = "auc"</code> should be passed to <code>performance()</code> together with the <code>prediction</code> object)</p>
+<p>Obtain the same curves as before:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ROC Curves with ROCR</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"ROCR"</span>)    </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="bayes-classifier-exercise-11.9-cornillon2019" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="bayes-classifier-exercise-11.9-cornillon2019"><span class="header-section-number">4.2</span> Bayes classifier (Exercise 11.9 <span class="citation" data-cites="cornillon2019">Cornillon et al. (<a href="#ref-cornillon2019" role="doc-biblioref">2019</a>)</span>)</h2>
+<p>Considering a pair of random variables <span class="math inline">\((X, Y)\)</span> taking values in <span class="math inline">\(\mathbb R\times\{0,1\}\)</span> with:</p>
+<p><span class="math inline">\(X\sim\mathcal U[-2,2]\)</span><span class="math inline">\(U\sim\mathcal U[0,10]\)</span></p>
+<p>and:</p>
+<p><span class="math display">\[\begin{aligned}
+Y|X=x  &amp; =\left\{
+\begin{array}{ll}
+\mathbf 1_{U\leq2}  &amp; \textrm{if } x\leq 0 \\
+\mathbf 1_{U&gt;1}  &amp; \textrm{if } x&gt;0
+\end{array}\right.
+\end{aligned}\]</span> where <span class="math inline">\(\mathcal U[a, b]\)</span> denotes the uniform distribution on <span class="math inline">\([a,b]\)</span> and <span class="math inline">\(X\)</span> and <span class="math inline">\(U\)</span> are assumed to be independent.</p>
+<p>Calculate the Bayes classifier and the Bayes risk.</p>
+</section>
+<section id="other-simulated-data-sets" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="other-simulated-data-sets"><span class="header-section-number">4.3</span> Other simulated data sets</h2>
+<p>Simulate other toy data sets, and plot decision boundaries. For example:</p>
+<ul>
+<li><p>Data set 1:</p>
+<ul>
+<li>Class 0: mixture of <span class="math inline">\(\mu_{0a}=\begin{bmatrix} 1 \\ 4 \end{bmatrix}\)</span>, <span class="math inline">\(\mu_{0b}=\begin{bmatrix} 1 \\ -4 \end{bmatrix}\)</span> <span class="math inline">\(\Sigma_{0a}=\Sigma_{0b}=\begin{bmatrix} 2 &amp; 0 \\ 0 &amp; 2 \end{bmatrix}\)</span></li>
+<li>Class 1: <span class="math inline">\(\mu_{1}=\begin{bmatrix} 4 \\ 0 \end{bmatrix}\)</span> <span class="math inline">\(\Sigma_{1}=\begin{bmatrix} 2 &amp; 0 \\ 0 &amp; 4 \end{bmatrix}\)</span></li>
+</ul></li>
+<li><p>Data set 2 (using a “generative” approach, with same assumptions as QDA): Given <span class="math inline">\(\mu_0\)</span>, <span class="math inline">\(\mu_1\)</span>, <span class="math inline">\(\Sigma_0\)</span> and <span class="math inline">\(\Sigma_1\)</span> and <span class="math inline">\(X\)</span> having values in <span class="math inline">\(\mathbb R^2\)</span>:</p>
+<ul>
+<li><p><span class="math inline">\(X|Y=0 \sim\mathcal N[\mu_0,\Sigma_0]\)</span>,</p></li>
+<li><p><span class="math inline">\(X|Y=1 \sim\mathcal N[\mu_1,\Sigma_1]\)</span> and <span class="math inline">\(\mathbb{P}[Y=1]=\pi\)</span></p></li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="references" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent" data-line-spacing="2" role="list">
 <div id="ref-cornillon2019" class="csl-entry" role="listitem">
 Cornillon, P.-A., Matzner-Løber, E., Hengartner, N., &amp; Rouvière, L. (2019). <em>Régression avec r - 2e édition</em>. EDP Sciences.
@@ -1850,7 +1976,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left">Scoring – M2 D3S/EGR 2025-2026 | TSE</div>   
+    <div class="nav-footer-left">Scoring – M2 D3S/EGR 2026-2027 | TSE</div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>

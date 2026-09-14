@@ -1894,7 +1894,7 @@
     "href": "slides/1_scoring_slides.html#outline-1",
     "title": "Scoring",
     "section": "Outline",
-    "text": "Outline\n\n\nCourse logistics\nScoring\n(Warm Up) Desbois case study"
+    "text": "Outline\n\n\nCourse logistics\nScoring\n(Warm Up) Farm holding case study"
   },
   {
     "objectID": "slides/1_scoring_slides.html#course-logistics-1",
@@ -2595,5 +2595,194 @@
     "title": "2_logreg_farm_holding",
     "section": "",
     "text": "This page is under construction."
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-1",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-1",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nFinancial problems of farm holdings\nThe article from Desbois (2008) (available here together with a sample data set) shows a complete case study around the detection of financial risks applicable to farm holdings.\nAmong others, Linear Discriminant Analysis and Logistic Regression (plus stepwise variable selection procedure) are used.\nROC curves are then provided to compare the two methods.\nThe original data set uses a format specific to the SPSS software, but is readable from R using the foreign package.\nThe case study by Desbois will be partly reproduced today and in the next lessons to quickly apply scoring techniques."
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-2",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-2",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nLoading Desbois data and first glimpse at it:\n\n\nCode\n# package used to import spss file\nlibrary(foreign)\n\ndon_desbois &lt;- read.spss(\"../data/presentation_data/Agriculture Farm Lending/desbois.sav\", to.data.frame = TRUE) %&gt;% as_tibble()\nglimpse(don_desbois)\n\n\nRows: 1,260\nColumns: 30\n$ CNTY    &lt;fct&gt; Eure, Eure, Eure, Eure, Eure, Eure, Eure, Eure, Eure, Eure, Eu…\n$ DIFF    &lt;fct&gt; healthy, healthy, healthy, healthy, healthy, healthy, healthy,…\n$ STATUS  &lt;fct&gt; Entreprise individuelle, Entreprise individuelle, Entreprise i…\n$ HECTARE &lt;dbl&gt; 166, 101, 138, 166, 137, 107, 100, 69, 176, 177, 108, 123, 87,…\n$ ToF     &lt;fct&gt; cereals, cereals, dairy farm, cereals, mixed livestock, cereal…\n$ OWNLAND &lt;fct&gt; yes, no, yes, yes, yes, yes, no, yes, yes, yes, yes, yes, yes,…\n$ AGE     &lt;dbl&gt; 35, 35, 42, 50, 33, 45, 34, 30, 44, 39, 40, 40, 40, 52, 49, 44…\n$ HARVEST &lt;fct&gt; 1988, 1988, 1988, 1988, 1988, 1988, 1988, 1988, 1988, 1988, 19…\n$ r1      &lt;dbl&gt; 0.449, 0.450, 0.332, 0.363, 0.440, 0.306, 0.717, 0.566, 0.145,…\n$ r2      &lt;dbl&gt; 0.622, 0.617, 0.819, 0.733, 0.650, 0.755, 0.320, 0.465, 0.881,…\n$ r3      &lt;dbl&gt; 0.25500, 0.24110, 0.55680, 0.35960, 0.31420, 0.26350, 0.16280,…\n$ r4      &lt;dbl&gt; 0.11450, 0.10840, 0.18510, 0.13050, 0.13820, 0.08055, 0.11680,…\n$ r5      &lt;dbl&gt; 0.334, 0.341, 0.147, 0.232, 0.302, 0.225, 0.601, 0.499, 0.115,…\n$ r6      &lt;dbl&gt; 0.785, 0.518, 0.700, 0.773, 0.846, 0.709, 0.894, 0.863, 0.439,…\n$ r7      &lt;dbl&gt; 0.585, 0.393, 0.310, 0.495, 0.580, 0.523, 0.748, 0.761, 0.348,…\n$ r8      &lt;dbl&gt; 0.20020, 0.12500, 0.38950, 0.27790, 0.26580, 0.18700, 0.14550,…\n$ r11     &lt;dbl&gt; 0.6628, 0.7098, 0.4142, 0.4661, 0.7715, 0.8178, 0.6598, 0.6619…\n$ r12     &lt;dbl&gt; 1.3698, 1.2534, 0.6370, 1.0698, 1.4752, 1.4682, 1.1018, 1.2360…\n$ r14     &lt;dbl&gt; 0.23200, 0.14970, 0.48470, 0.37350, 0.25630, 0.18610, 0.18070,…\n$ r17     &lt;dbl&gt; 0.0884, 0.0671, 0.0445, 0.0621, 0.0489, 0.0243, 0.0352, 0.0879…\n$ r18     &lt;dbl&gt; 0.0694, 0.0348, 0.0311, 0.0480, 0.0414, 0.0173, 0.0315, 0.0758…\n$ r19     &lt;dbl&gt; 0.1660, 0.1360, 0.1030, 0.1080, 0.1270, 0.0652, 0.1290, 0.2400…\n$ r21     &lt;dbl&gt; 0.1340, 0.0802, 0.0890, 0.0851, 0.0838, 0.0390, 0.0784, 0.1630…\n$ r22     &lt;dbl&gt; 0.3219, 0.3133, 0.2945, 0.1909, 0.2567, 0.1472, 0.3211, 0.5170…\n$ r24     &lt;dbl&gt; 0.295, 0.365, 0.166, 0.265, 0.257, 0.191, 0.322, 0.305, 0.180,…\n$ r28     &lt;dbl&gt; 0.475, 0.434, 0.350, 0.475, 0.475, 0.443, 0.401, 0.464, 0.475,…\n$ r30     &lt;dbl&gt; 0.35000, 0.29780, 0.24680, 0.37590, 0.36690, 0.37590, 0.27240,…\n$ r32     &lt;dbl&gt; 0.4313, 0.3989, 0.3187, 0.4313, 0.4313, 0.4257, 0.3697, 0.3886…\n$ r36     &lt;dbl&gt; 0.886, 0.351, 1.300, 1.385, 0.886, 1.316, 0.441, 0.761, 2.147,…\n$ r37     &lt;dbl&gt; 0.572, 0.867, 0.475, 0.470, 0.520, 0.431, 0.803, 0.656, 0.359,…"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-3",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-3",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nReplacing for convenience DIFF target by factor Y with O (healthy) or 1 (failing):\n\n\nCode\ndon_desbois &lt;- don_desbois %&gt;%\n    mutate(Y = as.factor(if_else(DIFF=='healthy', 0, 1)), DIFF = NULL,\n           .before = everything())\n\n\nWe give in the following slides the definitions of Desbois ratio \\(r_1,...,r_{37}\\), that we will use today, as found in the article.\nThey might give you inspiration to create new predictors/features for the project to come."
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-4",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-4",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nCapitalization ratios\n\n\nr1 total debt / total assets;\nr2 stockholders’ equity / invested capital;\nr3 short term debt / total debt;\nr4 short term debt / total assets;\nr5 long and medium term debt / total assets;"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-5",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-5",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nWeight of the debt ratios\n\n\nr6 total debt / gross product;\nr7 long and medium term debt / gross product;\nr8 short term debt / gross product;"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-6",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-6",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nLiquidity ratios\n\n\nr11 working capital / gross product;\nr12 working capital / (real inputs - financial expenses);\nr14 short term debt / circulating assets;"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-7",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-7",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nDebt servicing ratios\n\n\nr17 financial expenses / total debt;\nr18 financial expenses / gross product;\nr19 (financial expenses + refunding of long and medium term capital) / gross product;\nr21 financial expenses / EBITDA;\nr22 (financial expenses + refunding of long and medium term capital) / EBITDA;"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-8",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-8",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nCapital profitability ratio\n\nr24 EBITDA / total assets;"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-9",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-9",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nEarnings ratios\n\n\nr28 EBITDA / gross product;\nr30 available income / gross product;\nr32 (EBITDA - financial expenses) / gross product;"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-10",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-10",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nProductive activity ratios\n\n\nr36 immobilized assets / gross product;\nr37 gross product / total assets."
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-11",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-11",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nYour turn to play\nUsing the data set at hand, try to retrieve some findings of the Farm holding case study.\nYou might need R packages FactoMineR, ROCR and MASS::lda function to perform the tasks (“YOUR CODE HERE”) described in the following slides.\nEach time I show an example of what is expected.\nI suggest that you start using Quarto (setup here) to code and track/publish your results. It will be requested for your projects (it is very similar to RMarkdown). It integrates perfectly with RStudio."
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-12",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-12",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nPrincipal Component Analysis (PCA) of financial ratios\nFirst perform PCA on financial ratios (use for example package FactoMineR), then display correlations between ratios and the two first principal components :\n\n\nCode\n########## YOUR CODE HERE #####################"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-13",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-13",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nTo be compared with article Figure 1"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-14",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-14",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\n\n\nCode\n########## YOUR CODE HERE #####################\n\n\nFollowing Desbois path, visualize the farm holdings in data set as a bivariate plot on the first two components of PCA (based on financial ratios), use variable Y (0=”healthy”; 1=”failing”) to colour your observations:"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-15",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-15",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nTo be compared with article Figure 2\nIt strikes Desbois that the PCA (even if not a discriminative/scoring procedure), seems to do a rather good job identifying defaulting farms on the training set.\nDisclaimer: in general it won’t be necessarily the case as PCA operates only on the predictors without “knowledge” of target variable."
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-16",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-16",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nAs suggested by Desbois, extract the first principal component (some help here), and use it as a Scoring function.\nToday it will allow us to use a first Scoring function without introducing the Logistic Regression that you have not yet studied in class.\n\n\nCode\n########## YOUR CODE HERE #####################\n\n\nBelow the score for each observation is the x-axis or first principal component:"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-17",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-17",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nLooking at this plot Desbois concludes that a simple classifier can be devised using the first PCA coordinate (setting a threshold at \\(PC_1 &gt; 0.02\\)):"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-18",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-18",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nGoing further than Desbois and for illustrative purposes only, use \\(PC_1\\) as a very naive Scoring function.\nPlot below the ROC curve as defined in the Scoring part of the presentation (you can use package ROCR, but a simple for-loop for different cutoff values \\(s\\) will do the job):\n\n\nCode\n########## YOUR CODE HERE #####################\n\n\n\nWe follow closely the case study, but we will see that ROC curves are usually evaluated on a hold-out data set."
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-19",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-19",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nThen compare with a Scoring function obtained with Linear Discriminant Analysis (LDA). For a reminder on LDA see for example Hastie et al. (2009, Chapter 4.3 LDA, p. 103-111).\nYou can use Desbois variables selected in the article by a stepwise procedure (using Wilk’s lambda1). Selected variables are:\n\nSo basically you can fit LDA with r2+r3+r7+r14+r17+r18+r21+r32+r36 as predictors (I use R formula notation to ease your copy-paste).\nWe won’t describe the procedure here. A SPSS script is given in the article. It is not straightforward to reproduce it with R. I tried scripting manually the procedure and it works but is not very interesting."
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-20",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-20",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nFit LDA (MASS::lda) with model specification of your choice. Then display model coefficients:\n\n\nCode\n########## YOUR CODE HERE #####################\n\n\n\n\nUsing r2+r3+r7+r14+r17+r18+r21+r32+r36, we obtain:\n\n\n       LD1\nr2  -2.542\nr3   2.398\nr7   1.099\nr14  0.604\nr17 18.702\nr18 -6.798\nr21 -0.622\nr32 -4.163\nr36  0.192\n\n\n\nSimilar1 to what Desbois obtains:\n\n\n\nR does not provide constant for LDA which won’t affect Scoring function ordering."
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-21",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-21",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nNow compare the LDA Scoring function with the naive Score built with first component of PCA using a ROC curve (on training set):\n\n\nCode\n########## YOUR CODE HERE #####################"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-22",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-22",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nAs a very soft and intuitive introduction to logistic regression. First discretize a ratio \\(r\\) of your choice.\n\n\n\nCompute proportion of defaults among each class. For example using \\(0.01\\) steps for ratio \\(r17\\):\n\n\n\nCode\n########## YOUR CODE HERE #####################\n\n\n\n\n|r17_class  |0  |1 |Mean(Y)|\n|-----------|---|--|-------|\n|[0,0.01)   |  2| 0|0.0000 |\n|[0.01,0.02)|  4| 2|0.3333 |\n|[0.02,0.03)| 65|14|0.1772 |\n|[0.03,0.04)|106|38|0.2639 |\n|[0.04,0.05)|112|64|0.3636 |\n|[0.05,0.06)|104|77|0.4254 |\n|[0.06,0.07)| 88|93|0.5138 |\n|[0.07,0.08)| 63|83|0.5685 |\n|[0.08,0.09)| 49|66|0.5739 |\n|[0.09,0.1) | 27|71|0.7245 |\n|[0.1,0.11) | 14|42|0.7500 |\n|[0.11,0.12)| 12|42|0.7778 |\n|[0.12,0.13)|  7|14|0.6667 |\n|[0.19,0.2] |  0| 1|1.0000 |\n\n\n\n\nThen using this table, plot an empirical conditional distribution of default given \\(r\\) classes:\n\n\n\nCode\n########## YOUR CODE HERE #####################"
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-23",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-23",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\n\nWe notice that the mean default occurrence with respect to \\(r_{17}\\) classes follows a kind of “S”-shaped curve or sigmoid function. Note that the shape depends on classes width and might change. We “fitted” (blue-dotted) \\(\\sigma: x \\to\\sigma(x)=\\frac{e^{x}} { 1 + e^{x} }\\) also known as logistic function to the mean default occurences (orange segments)."
+  },
+  {
+    "objectID": "slides/1_scoring_slides.html#farm-holding-case-study-24",
+    "href": "slides/1_scoring_slides.html#farm-holding-case-study-24",
+    "title": "Scoring",
+    "section": "Farm holding case study",
+    "text": "Farm holding case study\nThis roughly corresponds to the intuitive introduction to the logistic regression model given in Hosmer et al. (2013) using a Coronary Heart Disease (CHD) event as \\(Y\\) and AGE as \\(X\\):"
+  },
+  {
+    "objectID": "handouts/1_scoring.html#roc-curves",
+    "href": "handouts/1_scoring.html#roc-curves",
+    "title": "1. Scoring: Concepts and Vocabulary",
+    "section": "4.1 ROC curves",
+    "text": "4.1 ROC curves\nUsing the Mixture data set, plot ROC curves for some chosen classifiers:\n\nfirst by implementing from scratch a method for plotting ROC curves using the course definition:\n\nFor a given threshold \\(s\\) and passing as argument a column of outputs \\(Y\\) together with a score column (i.e. predicted probabilities) define a function to obtain the False/True Positive Rates:\n\n\nCode\nroc_curve &lt;- function(s, error_rate){\n    # error_rate is a tibble containing a column Y of true values and a column score \n    \n    # let s be a threshold in R\n    # YOUR CODE HERE\n    \n    return(tibble(threshold = s, fpr = false_positive_rate, tpr = true_positive_rate))\n}\n\n\nFirst use this function to plot the ROC curve (passing a vector of thresholds \\(s\\)) for a Logistic Regression classifier defined and fitted in the first section of the course:\n\n\nCode\n# YOUR CODE HERE\n\n\nThen use it to plot the ROC curve for a Logistic Regression classifier using predictors modified using splines:\n\n\nCode\n# YOUR CODE HERE\n\n\nThen use it to plot the ROC curve for a Logistic Regression classifier using discretized quantitative predictors (binning):\n\n\nCode\n# YOUR CODE HERE\n\n\nTo finish show the ROC curve for a Decision Tree method:\n\n\nCode\n# YOUR CODE HERE\n\n\nPlot the ROC curves together:\n\n\nCode\n# YOUR CODE HERE\n\n\n\nDo the same using the ROCR package (see ROCR_Talk_Tobias_Sing.ppt in course repository for a presentation by its authors)\n\nThe library ROCR needs to first build a prediction object using a column of outputs \\(Y\\) together with a score column (i.e. predicted probabilities), then to build a performance object (for a ROC curve the arguments measure = \"tpr\", x.measure = \"fpr\" should be passed to performance() together with the prediction object / for the AUC the argument measure = \"auc\" should be passed to performance() together with the prediction object)\nObtain the same curves as before:\n\n\nCode\n# ROC Curves with ROCR\nlibrary(\"ROCR\")    \n# YOUR CODE HERE"
+  },
+  {
+    "objectID": "handouts/1_scoring.html#bayes-classifier-exercise-11.9-cornillon2019",
+    "href": "handouts/1_scoring.html#bayes-classifier-exercise-11.9-cornillon2019",
+    "title": "1. Scoring: Concepts and Vocabulary",
+    "section": "4.2 Bayes classifier (Exercise 11.9 Cornillon et al. (2019))",
+    "text": "4.2 Bayes classifier (Exercise 11.9 Cornillon et al. (2019))\nConsidering a pair of random variables \\((X, Y)\\) taking values in \\(\\mathbb R\\times\\{0,1\\}\\) with:\n\\(X\\sim\\mathcal U[-2,2]\\)\\(U\\sim\\mathcal U[0,10]\\)\nand:\n\\[\\begin{aligned}\nY|X=x  & =\\left\\{\n\\begin{array}{ll}\n\\mathbf 1_{U\\leq2}  & \\textrm{if } x\\leq 0 \\\\\n\\mathbf 1_{U&gt;1}  & \\textrm{if } x&gt;0\n\\end{array}\\right.\n\\end{aligned}\\] where \\(\\mathcal U[a, b]\\) denotes the uniform distribution on \\([a,b]\\) and \\(X\\) and \\(U\\) are assumed to be independent.\nCalculate the Bayes classifier and the Bayes risk."
+  },
+  {
+    "objectID": "handouts/1_scoring.html#other-simulated-data-sets",
+    "href": "handouts/1_scoring.html#other-simulated-data-sets",
+    "title": "1. Scoring: Concepts and Vocabulary",
+    "section": "4.3 Other simulated data sets",
+    "text": "4.3 Other simulated data sets\nSimulate other toy data sets, and plot decision boundaries. For example:\n\nData set 1:\n\nClass 0: mixture of \\(\\mu_{0a}=\\begin{bmatrix} 1 \\\\ 4 \\end{bmatrix}\\), \\(\\mu_{0b}=\\begin{bmatrix} 1 \\\\ -4 \\end{bmatrix}\\) \\(\\Sigma_{0a}=\\Sigma_{0b}=\\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix}\\)\nClass 1: \\(\\mu_{1}=\\begin{bmatrix} 4 \\\\ 0 \\end{bmatrix}\\) \\(\\Sigma_{1}=\\begin{bmatrix} 2 & 0 \\\\ 0 & 4 \\end{bmatrix}\\)\n\nData set 2 (using a “generative” approach, with same assumptions as QDA): Given \\(\\mu_0\\), \\(\\mu_1\\), \\(\\Sigma_0\\) and \\(\\Sigma_1\\) and \\(X\\) having values in \\(\\mathbb R^2\\):\n\n\\(X|Y=0 \\sim\\mathcal N[\\mu_0,\\Sigma_0]\\),\n\\(X|Y=1 \\sim\\mathcal N[\\mu_1,\\Sigma_1]\\) and \\(\\mathbb{P}[Y=1]=\\pi\\)"
   }
 ]
