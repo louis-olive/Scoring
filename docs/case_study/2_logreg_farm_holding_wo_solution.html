@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Your NAME">
 
-<title>Scoring – M2 D3S/EGR 2025-2026 - 2_logreg_farm_holding</title>
+<title>Scoring – M2 D3S/EGR 2026-2027 - Case Study: Part 2: Farm Holding, EDA &amp; Logistic regression</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +21,60 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -67,6 +121,11 @@ ul.task-list li input[type="checkbox"] {
   };
 </script>
 
+<link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -103,7 +162,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
         <li>
     <a class="dropdown-item" href="../handouts/2_logistic_regression.html" rel="" target="">
- <span class="dropdown-text">2_logistic_regression</span></a>
+ <span class="dropdown-text">2. Logistic regression</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../handouts/3_decision_trees.html" rel="" target="">
@@ -122,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
         <li>
     <a class="dropdown-item" href="../case_study/2_logreg_farm_holding_wo_solution.html" rel="" target="">
- <span class="dropdown-text">2_logreg_farm_holding</span></a>
+ <span class="dropdown-text">Case Study: Part 2: Farm Holding, EDA &amp; Logistic regression</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../case_study/3_trees_farm_holding_wo_solution.html" rel="" target="">
@@ -141,7 +200,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">2_logreg_farm_holding</li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../handouts/2_logistic_regression.html">Session 2 — Logistic Regression</a></li><li class="breadcrumb-item"><a href="../case_study/2_logreg_farm_holding_wo_solution.html">Case Study: Part 2: Farm Holding, EDA &amp; Logistic regression</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -168,6 +227,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">1. Scoring: Concepts and Vocabulary</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../case_study/1_data_and_eda_farm_holding_wo_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Study: Part 1: Farm Holding, EDA &amp; PCA as First Score</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -182,7 +247,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../handouts/2_logistic_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2_logistic_regression</span></a>
+ <span class="menu-text">2. Logistic regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../case_study/2_logreg_farm_holding_wo_solution.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Case Study: Part 2: Farm Holding, EDA &amp; Logistic regression</span></a>
   </div>
 </li>
       </ul>
@@ -202,6 +273,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">3_decision_trees</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../case_study/3_trees_farm_holding_wo_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3_trees_farm_holding</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -210,9 +287,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#coming-soon" id="toc-coming-soon" class="nav-link active" data-scroll-target="#coming-soon"><span class="header-section-number">1</span> Coming soon</a></li>
+  <li><a href="#the-farm-holding-desbois-case-study" id="toc-the-farm-holding-desbois-case-study" class="nav-link active" data-scroll-target="#the-farm-holding-desbois-case-study"><span class="header-section-number">1</span> The Farm holding / Desbois Case Study</a>
+  <ul class="collapse">
+  <li><a href="#context" id="toc-context" class="nav-link" data-scroll-target="#context"><span class="header-section-number">1.1</span> Context</a></li>
+  </ul></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">2</span> Data</a>
+  <ul class="collapse">
+  <li><a href="#loading" id="toc-loading" class="nav-link" data-scroll-target="#loading"><span class="header-section-number">2.1</span> Loading</a></li>
+  </ul></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="2_logreg_farm_holding_wo_solution.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </nav>
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
@@ -223,13 +307,19 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">2_logreg_farm_holding</h1>
+<h1 class="title">Case Study: Part 2: Farm Holding, EDA &amp; Logistic regression</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Your NAME </p>
+          </div>
+  </div>
     
   
     
@@ -238,14 +328,150 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="coming-soon" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="coming-soon"><span class="header-section-number">1</span> Coming soon</h2>
-<p>This page is under construction.</p>
+<section id="the-farm-holding-desbois-case-study" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> The Farm holding / Desbois Case Study</h1>
+<section id="context" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="context"><span class="header-section-number">1.1</span> Context</h2>
+<p>The article from <span class="citation" data-cites="desbois2008">Desbois (<a href="#ref-desbois2008" role="doc-biblioref">2008</a>)</span> (available <a href="https://csbigs.fr/index.php/csbigs/article/view/351">here</a> together with a sample data set) presents a complete case study around the detection of financial risks for <strong>farm holdings</strong> in France.</p>
+<p>Among other methods, Linear Discriminant Analysis and Logistic Regression (plus a stepwise variable selection procedure) are used. ROC curves are provided to compare the methods.</p>
+<p>We will reproduce and extend the Desbois case study throughout this course as a <strong>running example</strong> (“fil rouge”). At each stage, we apply the concepts introduced in the preceding handout.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What you’ll do in this Part 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Following the concepts from <a href="../handouts/2_logistic_regression.html">Handout 2: Logistic Regression</a>:</p>
+<ol type="1">
+<li>Load and perform EDA on the Desbois dataset. In particular. Understand the 37 financial ratios used as predictors</li>
+<li>Reuse the two scores from Part 1 (naive score based on PCA and LDA) as baselines</li>
+<li>Evaluate it with a ROC curve</li>
+</ol>
+</div>
+</div>
+</section>
+</section>
+<section id="data" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Data</h1>
+<section id="loading" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="loading"><span class="header-section-number">2.1</span> Loading</h2>
+<p>Loading Desbois data and first glimpse at it:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># package used to import spss file</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreign)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>don_desbois <span class="ot">&lt;-</span> <span class="fu">read.spss</span>(<span class="st">"../data/presentation_data/Agriculture Farm Lending/desbois.sav"</span>, <span class="at">to.data.frame =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(don_desbois)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,260
+Columns: 30
+$ CNTY    &lt;fct&gt; Eure, Eure, Eure, Eure, Eure, Eure, Eure, Eure, Eure, Eure, Eu…
+$ DIFF    &lt;fct&gt; healthy, healthy, healthy, healthy, healthy, healthy, healthy,…
+$ STATUS  &lt;fct&gt; Entreprise individuelle, Entreprise individuelle, Entreprise i…
+$ HECTARE &lt;dbl&gt; 166, 101, 138, 166, 137, 107, 100, 69, 176, 177, 108, 123, 87,…
+$ ToF     &lt;fct&gt; cereals, cereals, dairy farm, cereals, mixed livestock, cereal…
+$ OWNLAND &lt;fct&gt; yes, no, yes, yes, yes, yes, no, yes, yes, yes, yes, yes, yes,…
+$ AGE     &lt;dbl&gt; 35, 35, 42, 50, 33, 45, 34, 30, 44, 39, 40, 40, 40, 52, 49, 44…
+$ HARVEST &lt;fct&gt; 1988, 1988, 1988, 1988, 1988, 1988, 1988, 1988, 1988, 1988, 19…
+$ r1      &lt;dbl&gt; 0.449, 0.450, 0.332, 0.363, 0.440, 0.306, 0.717, 0.566, 0.145,…
+$ r2      &lt;dbl&gt; 0.622, 0.617, 0.819, 0.733, 0.650, 0.755, 0.320, 0.465, 0.881,…
+$ r3      &lt;dbl&gt; 0.25500, 0.24110, 0.55680, 0.35960, 0.31420, 0.26350, 0.16280,…
+$ r4      &lt;dbl&gt; 0.11450, 0.10840, 0.18510, 0.13050, 0.13820, 0.08055, 0.11680,…
+$ r5      &lt;dbl&gt; 0.334, 0.341, 0.147, 0.232, 0.302, 0.225, 0.601, 0.499, 0.115,…
+$ r6      &lt;dbl&gt; 0.785, 0.518, 0.700, 0.773, 0.846, 0.709, 0.894, 0.863, 0.439,…
+$ r7      &lt;dbl&gt; 0.585, 0.393, 0.310, 0.495, 0.580, 0.523, 0.748, 0.761, 0.348,…
+$ r8      &lt;dbl&gt; 0.20020, 0.12500, 0.38950, 0.27790, 0.26580, 0.18700, 0.14550,…
+$ r11     &lt;dbl&gt; 0.6628, 0.7098, 0.4142, 0.4661, 0.7715, 0.8178, 0.6598, 0.6619…
+$ r12     &lt;dbl&gt; 1.3698, 1.2534, 0.6370, 1.0698, 1.4752, 1.4682, 1.1018, 1.2360…
+$ r14     &lt;dbl&gt; 0.23200, 0.14970, 0.48470, 0.37350, 0.25630, 0.18610, 0.18070,…
+$ r17     &lt;dbl&gt; 0.0884, 0.0671, 0.0445, 0.0621, 0.0489, 0.0243, 0.0352, 0.0879…
+$ r18     &lt;dbl&gt; 0.0694, 0.0348, 0.0311, 0.0480, 0.0414, 0.0173, 0.0315, 0.0758…
+$ r19     &lt;dbl&gt; 0.1660, 0.1360, 0.1030, 0.1080, 0.1270, 0.0652, 0.1290, 0.2400…
+$ r21     &lt;dbl&gt; 0.1340, 0.0802, 0.0890, 0.0851, 0.0838, 0.0390, 0.0784, 0.1630…
+$ r22     &lt;dbl&gt; 0.3219, 0.3133, 0.2945, 0.1909, 0.2567, 0.1472, 0.3211, 0.5170…
+$ r24     &lt;dbl&gt; 0.295, 0.365, 0.166, 0.265, 0.257, 0.191, 0.322, 0.305, 0.180,…
+$ r28     &lt;dbl&gt; 0.475, 0.434, 0.350, 0.475, 0.475, 0.443, 0.401, 0.464, 0.475,…
+$ r30     &lt;dbl&gt; 0.35000, 0.29780, 0.24680, 0.37590, 0.36690, 0.37590, 0.27240,…
+$ r32     &lt;dbl&gt; 0.4313, 0.3989, 0.3187, 0.4313, 0.4313, 0.4257, 0.3697, 0.3886…
+$ r36     &lt;dbl&gt; 0.886, 0.351, 1.300, 1.385, 0.886, 1.316, 0.441, 0.761, 2.147,…
+$ r37     &lt;dbl&gt; 0.572, 0.867, 0.475, 0.470, 0.520, 0.431, 0.803, 0.656, 0.359,…</code></pre>
+</div>
+</div>
+<p>Replacing for convenience <code>DIFF</code> target by factor <code>Y</code> with <code>O</code> (healthy) or <code>1</code> (failing):</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>don_desbois <span class="ot">&lt;-</span> don_desbois <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Y =</span> <span class="fu">as.factor</span>(<span class="fu">if_else</span>(DIFF<span class="sc">==</span><span class="st">'healthy'</span>, <span class="dv">0</span>, <span class="dv">1</span>)), <span class="at">DIFF =</span> <span class="cn">NULL</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">.before =</span> <span class="fu">everything</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Your turn to play.</p>
+<p>First Exploratory Data Analysis (EDA) of predictors/output:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">########## YOUR CODE HERE #####################</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>As a very soft and intuitive introduction to logistic regression. First discretize a ratio <span class="math inline">\(r\)</span> of your choice.</p>
+<ul>
+<li>Compute proportion of defaults among each class. For example using <span class="math inline">\(0.01\)</span> steps for ratio <span class="math inline">\(r17\)</span>:</li>
+</ul>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">########## YOUR CODE HERE #####################</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ul>
+<li>Then using this table, plot an empirical conditional distribution of default given <span class="math inline">\(r\)</span> classes:</li>
+</ul>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">########## YOUR CODE HERE #####################</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>This roughly corresponds to the intuitive introduction to the logistic regression model given in <span class="citation" data-cites="hosmer2013">Hosmer et al. (<a href="#ref-hosmer2013" role="doc-biblioref">2013</a>)</span> using a Coronary Heart Disease (CHD) event as <span class="math inline">\(Y\)</span> and AGE as <span class="math inline">\(X\)</span>:</p>
+<p><img src="../images/hosmer_lemeshow_chd3.png" class="img-fluid"></p>
+<p><img src="../images/hosmer_lemeshow_chd4.png" class="img-fluid"></p>
+<p>Fit a Logistic Regression model with all variables in data set, interpret the <code>r17</code> coefficient:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">########## YOUR CODE HERE #####################</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now compare the Scoring function/Score obtained from Logistic Regression model to the LDA and naive Score built with first component of PCA using a ROC curve:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">########## YOUR CODE HERE #####################</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
 
 
 </section>
+</section>
 
-<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-line-spacing="2" role="list">
+<div id="ref-desbois2008" class="csl-entry" role="listitem">
+Desbois, D. (2008). <span class="nocase">Introduction to scoring methods: financial problems of farm holdings</span>. <em><span>Case Studies in Business, Industry and Government Statistics</span></em>, <em>2</em>(1), 56–76. <a href="https://hal.science/hal-01172847">https://hal.science/hal-01172847</a>
+</div>
+<div id="ref-hosmer2013" class="csl-entry" role="listitem">
+Hosmer, D. W., Lemeshow, S., &amp; Sturdivant, R. X. (2013). Applied logistic regression. In <em>Wiley Series in Probability and Statistics</em>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -482,7 +708,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left">Scoring – M2 D3S/EGR 2025-2026 | TSE</div>   
+    <div class="nav-footer-left">Scoring – M2 D3S/EGR 2026-2027 | TSE</div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>

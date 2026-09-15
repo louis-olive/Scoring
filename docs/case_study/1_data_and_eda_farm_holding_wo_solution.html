@@ -8,7 +8,7 @@
 
 <meta name="author" content="Your NAME">
 
-<title>Scoring – M2 D3S/EGR 2025-2026 - Case Study: Part 1: Farm Holding, EDA &amp; PCA as First Score</title>
+<title>Scoring – M2 D3S/EGR 2026-2027 - Case Study: Part 1: Farm Holding, EDA &amp; PCA as First Score</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -162,7 +162,7 @@ div.csl-indent {
   </li>  
         <li>
     <a class="dropdown-item" href="../handouts/2_logistic_regression.html" rel="" target="">
- <span class="dropdown-text">2_logistic_regression</span></a>
+ <span class="dropdown-text">2. Logistic regression</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../handouts/3_decision_trees.html" rel="" target="">
@@ -181,7 +181,7 @@ div.csl-indent {
   </li>  
         <li>
     <a class="dropdown-item" href="../case_study/2_logreg_farm_holding_wo_solution.html" rel="" target="">
- <span class="dropdown-text">2_logreg_farm_holding</span></a>
+ <span class="dropdown-text">Case Study: Part 2: Farm Holding, EDA &amp; Logistic regression</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../case_study/3_trees_farm_holding_wo_solution.html" rel="" target="">
@@ -200,7 +200,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Case Study: Part 1: Farm Holding, EDA &amp; PCA as First Score</li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../handouts/1_scoring.html">Session 1 — Scoring</a></li><li class="breadcrumb-item"><a href="../case_study/1_data_and_eda_farm_holding_wo_solution.html">Case Study: Part 1: Farm Holding, EDA &amp; PCA as First Score</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -227,6 +227,12 @@ div.csl-indent {
  <span class="menu-text">1. Scoring: Concepts and Vocabulary</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../case_study/1_data_and_eda_farm_holding_wo_solution.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Case Study: Part 1: Farm Holding, EDA &amp; PCA as First Score</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -241,7 +247,13 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../handouts/2_logistic_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2_logistic_regression</span></a>
+ <span class="menu-text">2. Logistic regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../case_study/2_logreg_farm_holding_wo_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Study: Part 2: Farm Holding, EDA &amp; Logistic regression</span></a>
   </div>
 </li>
       </ul>
@@ -261,6 +273,12 @@ div.csl-indent {
  <span class="menu-text">3_decision_trees</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../case_study/3_trees_farm_holding_wo_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3_trees_farm_holding</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -271,7 +289,7 @@ div.csl-indent {
   <ul>
   <li><a href="#quarto" id="toc-quarto" class="nav-link active" data-scroll-target="#quarto"><span class="header-section-number">0.1</span> Quarto</a></li>
   <li><a href="#running-code" id="toc-running-code" class="nav-link" data-scroll-target="#running-code"><span class="header-section-number">0.2</span> Running Code</a></li>
-  <li><a href="#the-desbois-case-study" id="toc-the-desbois-case-study" class="nav-link" data-scroll-target="#the-desbois-case-study"><span class="header-section-number">1</span> The Desbois Case Study</a>
+  <li><a href="#the-farm-holdingdesbois-case-study" id="toc-the-farm-holdingdesbois-case-study" class="nav-link" data-scroll-target="#the-farm-holdingdesbois-case-study"><span class="header-section-number">1</span> The Farm holding/Desbois Case Study</a>
   <ul class="collapse">
   <li><a href="#context" id="toc-context" class="nav-link" data-scroll-target="#context"><span class="header-section-number">1.1</span> Context</a></li>
   </ul></li>
@@ -336,8 +354,8 @@ div.csl-indent {
 </div>
 <p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
 </section>
-<section id="the-desbois-case-study" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> The Desbois Case Study</h1>
+<section id="the-farm-holdingdesbois-case-study" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> The Farm holding/Desbois Case Study</h1>
 <section id="context" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="context"><span class="header-section-number">1.1</span> Context</h2>
 <p>The article from <span class="citation" data-cites="desbois2008">Desbois (<a href="#ref-desbois2008" role="doc-biblioref">2008</a>)</span> (available <a href="https://csbigs.fr/index.php/csbigs/article/view/351">here</a> together with a sample data set) presents a complete case study around the detection of financial risks for <strong>farm holdings</strong> in France.</p>
@@ -349,7 +367,7 @@ div.csl-indent {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-What you’ll do in this part
+What you’ll do in this Part 1
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -768,7 +786,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left">Scoring – M2 D3S/EGR 2025-2026 | TSE</div>   
+    <div class="nav-footer-left">Scoring – M2 D3S/EGR 2026-2027 | TSE</div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>

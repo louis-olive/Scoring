@@ -29,7 +29,6 @@ format:
 execute: 
   #cache: true
   warning: false
-editor: visual
 fontsize: 11pt
 ---
 
@@ -54,7 +53,7 @@ You can add options to executable code like this
 
 The `echo: false` option disables the printing of code (only output is displayed).
 
-# The Desbois Case Study
+# The Farm holding/Desbois Case Study
 
 ## Context
 
@@ -64,16 +63,16 @@ Among other methods, Linear Discriminant Analysis and Logistic Regression (plus 
 
 We will reproduce and extend the Desbois case study throughout this course as a **running example** ("fil rouge"). At each stage, we apply the concepts introduced in the preceding handout.
 
-::: {.callout-tip}
-## What you'll do in this part
+::: callout-tip
+## What you'll do in this Part 1
 
 Following the concepts from [Handout 1: Scoring](../handouts/1_scoring.qmd):
 
-1. Load and explore the Desbois dataset
-2. Understand the 37 financial ratios used as predictors
-3. Perform PCA on financial ratios and discover that even this unsupervised method separates defaulting farms
-4. Use the first principal component as a **naive scoring function**
-5. Evaluate it with a ROC curve
+1.  Load and explore the Desbois dataset
+2.  Understand the 37 financial ratios used as predictors
+3.  Perform PCA on financial ratios and discover that even this unsupervised method separates defaulting farms
+4.  Use the first principal component as a **naive scoring function**
+5.  Evaluate it with a ROC curve
 :::
 
 # Data
