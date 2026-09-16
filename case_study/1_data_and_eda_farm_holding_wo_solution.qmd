@@ -57,7 +57,7 @@ The `echo: false` option disables the printing of code (only output is displayed
 
 ## Context
 
-The article from @desbois2008 (available [here](https://csbigs.fr/index.php/csbigs/article/view/351) together with a sample data set) presents a complete case study around the detection of financial risks for **farm holdings** in France.
+The article from @desbois2008 (available [here](https://csbigs.fr/index.php/csbigs/article/view/351.html) together with a sample data set) presents a complete case study around the detection of financial risks for **farm holdings** in France.
 
 Among other methods, Linear Discriminant Analysis and Logistic Regression (plus a stepwise variable selection procedure) are used. ROC curves are provided to compare the methods.
 

@@ -1,0 +1,145 @@
+---
+title: "Case Study: Part 2: Farm Holding, EDA & Logistic regression"
+author: "Your NAME"
+bibliography: ../assets/references_intro.bib
+csl: ../assets/apa.csl
+link-citations: true
+format:
+  html:
+    theme: 
+       light: cerulean
+    # theme: darkly
+    # highlight: espresso
+    code-copy: true
+    code-fold: true
+    df-print: paged
+    include-in-header: ../assets/mathjax.html
+    number-sections: true
+    toc: true
+    toc_depth: 3
+    toc_float: yes
+    toc-location: left
+    fontsize: 10pt
+    mainfont: "Helvetica Neue"
+  pdf:
+    number-sections: true
+    toc: true
+    toc_depth: 2
+    toc_float: yes
+execute: 
+  #cache: true
+  warning: false
+fontsize: 11pt
+---
+
+# The Farm holding / Desbois Case Study
+
+## Context
+
+The article from @desbois2008 (available [here](https://csbigs.fr/index.php/csbigs/article/view/351.html) together with a sample data set) presents a complete case study around the detection of financial risks for **farm holdings** in France.
+
+Among other methods, Linear Discriminant Analysis and Logistic Regression (plus a stepwise variable selection procedure) are used. ROC curves are provided to compare the methods.
+
+We will reproduce and extend the Desbois case study throughout this course as a **running example** ("fil rouge"). At each stage, we apply the concepts introduced in the preceding handout.
+
+::: callout-tip
+## What you'll do in this Part 2
+
+Following the concepts from [Handout 2: Logistic Regression](../handouts/2_logistic_regression.qmd):
+
+1.  Load and perform EDA on the Desbois dataset. In particular. Understand the 37 financial ratios used as predictors
+2.  Reuse the two scores from Part 1 (naive score based on PCA and LDA) as baselines
+3.  Evaluate it with a ROC curve
+:::
+
+# Data
+
+## Loading
+
+Loading Desbois data and first glimpse at it:
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+
+library(tidyverse)
+# package used to import spss file
+library(foreign)
+
+don_desbois <- read.spss("../data/presentation_data/Agriculture Farm Lending/desbois.sav", to.data.frame = TRUE) %>% as_tibble()
+glimpse(don_desbois)
+```
+
+Replacing for convenience `DIFF` target by factor `Y` with `O` (healthy) or `1` (failing):
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+
+don_desbois <- don_desbois %>%
+    mutate(Y = as.factor(if_else(DIFF=='healthy', 0, 1)), DIFF = NULL,
+           .before = everything())
+
+```
+
+Your turn to play.
+
+First Exploratory Data Analysis (EDA) of predictors/output:
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+
+########## YOUR CODE HERE #####################
+```
+
+As a very soft and intuitive introduction to logistic regression. First discretize a ratio $r$ of your choice.
+
+-   Compute proportion of defaults among each class. For example using $0.01$ steps for ratio $r17$:
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+
+########## YOUR CODE HERE #####################
+```
+
+-   Then using this table, plot an empirical conditional distribution of default given $r$ classes:
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+
+########## YOUR CODE HERE #####################
+```
+
+This roughly corresponds to the intuitive introduction to the logistic regression model given in @hosmer2013 using a Coronary Heart Disease (CHD) event as $Y$ and AGE as $X$:
+
+![](../images/hosmer_lemeshow_chd3.png)
+
+![](../images/hosmer_lemeshow_chd4.png)
+
+Fit a Logistic Regression model with all variables in data set, interpret the `r17` coefficient:
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+
+########## YOUR CODE HERE #####################
+```
+
+Now compare the Scoring function/Score obtained from Logistic Regression model to the LDA and naive Score built with first component of PCA using a ROC curve:
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+
+########## YOUR CODE HERE #####################
+```
