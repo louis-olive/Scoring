@@ -86,6 +86,8 @@ don_desbois <- don_desbois %>%
 
 Your turn to play.
 
+## EDA
+
 First Exploratory Data Analysis (EDA) of predictors/output:
 
 ```{r}
@@ -124,7 +126,19 @@ This roughly corresponds to the intuitive introduction to the logistic regressio
 
 ![](../images/hosmer_lemeshow_chd4.png)
 
-Fit a Logistic Regression model with all variables in data set, interpret the `r17` coefficient:
+# Logistic Regression
+
+## Fitting / Coefficient interpretation
+
+Using Farm holding data, compute (using a table for example):
+- The empirical odds of failure
+- The empirical odds of failure given that the farmer owns his land/farm or not
+
+Compute / interpret the empirical odds ratios (OWNLAND Yes/No)
+
+Fit a Logistic Regression model with an intercept and a single qualitative predictor OWNLAND. Interpret the estimated coefficient for OWNLAND.
+
+Fit a Logistic Regression model with all variables in data set, interpret the `r17` coefficient (in terms of probability and odds of failure):
 
 ```{r}
 #| echo: true
@@ -134,6 +148,7 @@ Fit a Logistic Regression model with all variables in data set, interpret the `r
 ########## YOUR CODE HERE #####################
 ```
 
+
 Now compare the Scoring function/Score obtained from Logistic Regression model to the LDA and naive Score built with first component of PCA using a ROC curve:
 
 ```{r}
@@ -142,4 +157,35 @@ Now compare the Scoring function/Score obtained from Logistic Regression model t
 #| warning: false
 
 ########## YOUR CODE HERE #####################
+```
+
+## Confidence interval
+
+Build a confidence interval for financial ratio `r17` and `r36`.
+
+
+## Tests
+
+Considering the model `Y~.`, is the effect of variable `r36` significant? Using Wald test. Using Likelihood Ratio Test.
+
+### Wald
+
+```{r}
+# YOUR CODE HERE
+```
+
+### LRT
+
+```{r}
+# YOUR CODE HERE
+```
+
+Fit a "large" model with 10 financial ratios (including `r17` and `r36`) as predictors. Fit a "smaller" model removing `r17` and 2/3 additional ratios of your choice. Test using LRT the two model fit, which one would you retain?
+
+Hosmer & Lemeshow
+
+Perform a goodness of fit test and a calibration plot, compare.
+
+```{r}
+# YOUR CODE HERE
 ```
