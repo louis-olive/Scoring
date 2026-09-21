@@ -182,9 +182,9 @@ Considering the model `Y~.`, is the effect of variable `r36` significant? Using 
 
 Fit a "large" model with 10 financial ratios (including `r17` and `r36`) as predictors. Fit a "smaller" model removing `r17` and 2/3 additional ratios of your choice. Test using LRT the two model fit, which one would you retain?
 
-Hosmer & Lemeshow
+### Goodness of fit
 
-Perform a goodness of fit test and a calibration plot, compare.
+Perform a goodness of fit test (Hosmer and Lemeshow) and a calibration plot, compare.
 
 ```{r}
 # YOUR CODE HERE
