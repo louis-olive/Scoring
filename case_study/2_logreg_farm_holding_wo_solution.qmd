@@ -47,14 +47,22 @@ We will reproduce and extend the Desbois case study throughout this course as a 
 
 Following the concepts from [Handout 2: Logistic Regression](../handouts/2_logistic_regression.qmd):
 
-1.  Load and perform EDA on the Desbois dataset. In particular. Understand the 37 financial ratios used as predictors
-2.  Reuse the two scores from Part 1 (naive score based on PCA and LDA) as baselines
-3.  Evaluate it with a ROC curve
+0.  Load and perform EDA on the Desbois dataset. In particular. Understand the 37 financial ratios used as predictors
+0.  Reuse the two scores from Part 1 (naive score based on PCA and LDA) as baselines
+1.  Empirical odds of Failure (+given that the farmer OWNLAND Yes/No) / Empirical odds ratio
+2.  Fit a Logistic Regression model with an intercept and a single qualitative predictor OWNLAND. Interpret the estimated coefficients
+2.  Fit a Logistic Regression model with all variables in data set, interpret the r17 coefficient 
+3.  Compare the Scoring function/Score obtained from Logistic Regression model to the LDA and naive Score built with first component of PCA (Part 1) using a ROC curve
+4.  Perform statistical inference : Confidence intervals / Tests on logistic regression models (Wald, LRT) / Goodness of fit
+5. Select model variables using forward stepwise procedure
+6. Perform penalized logistic regression (Lasso) on the data set
+7. Assess the models introduced before (naive Score, LDA, various Logistic Regression models) using resampling techniques (Hold-out and K-fold Cross Validation).
+
 :::
 
-# Data
+## Data
 
-## Loading
+### Loading
 
 Loading Desbois data and first glimpse at it:
 
@@ -86,7 +94,7 @@ don_desbois <- don_desbois %>%
 
 Your turn to play.
 
-## EDA
+### EDA
 
 First Exploratory Data Analysis (EDA) of predictors/output:
 
@@ -126,9 +134,9 @@ This roughly corresponds to the intuitive introduction to the logistic regressio
 
 ![](../images/hosmer_lemeshow_chd4.png)
 
-# Logistic Regression
+## Logistic Regression
 
-## Fitting / Coefficient interpretation
+### Fitting / Coefficient interpretation
 
 Using Farm holding data, compute (using a table for example):
 - The empirical odds of failure
@@ -138,7 +146,7 @@ Compute / interpret the empirical odds ratios (OWNLAND Yes/No)
 
 Fit a Logistic Regression model with an intercept and a single qualitative predictor OWNLAND. Interpret the estimated coefficient for OWNLAND.
 
-Fit a Logistic Regression model with all variables in data set, interpret the `r17` coefficient (in terms of probability and odds of failure):
+Fit a "full" Logistic Regression model with all predictors in data set, interpret the `r17` coefficient (in terms of probability and odds of failure):
 
 ```{r}
 #| echo: true
@@ -159,33 +167,90 @@ Now compare the Scoring function/Score obtained from Logistic Regression model t
 ########## YOUR CODE HERE #####################
 ```
 
-## Confidence interval
+### Confidence interval
 
-Build a confidence interval for financial ratio `r17` and `r36`.
+Build a confidence interval for financial ratio `r17` and `r36` using estimated coefficients and standard errors.
 
 
-## Tests
+### Tests
 
-Considering the model `Y~.`, is the effect of variable `r36` significant? Using Wald test. Using Likelihood Ratio Test.
+Considering the "full" model `Y~.`, assess the statistical significance of `r36`? Using Wald test. Using Likelihood Ratio Test. 
 
-### Wald
+#### Wald Test
 
 ```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
 # YOUR CODE HERE
 ```
 
-### LRT
+#### LRT Test
 
 ```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
 # YOUR CODE HERE
 ```
 
-Fit a "large" model with 10 financial ratios (including `r17` and `r36`) as predictors. Fit a "smaller" model removing `r17` and 2/3 additional ratios of your choice. Test using LRT the two model fit, which one would you retain?
+Fit a "large" model with 9/10 financial ratios (including `r17` and `r36`) as predictors. Fit a "smaller" model removing `r17` and 2/3 additional ratios of your choice. Compare using LRT the two model fit, which one would you retain?
 
-### Goodness of fit
+#### Goodness of fit tests
 
 Perform a goodness of fit test (Hosmer and Lemeshow) and a calibration plot, compare.
 
 ```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+# YOUR CODE HERE
+```
+
+## Model selection and assessment
+
+### Stepwise Logistic Regression
+
+Use forward stepwise selection based on the AIC criterion to select variables in the Farm holding data set. Compare with results from the article. Do you find the same variables as the author? (Extra, perform the same analysis using LDA/Wilks Lambda forward selection procedure as in the article).
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+# YOUR CODE HERE
+```
+
+### Penalized Logistic Regression
+
+Perform penalized logistic regression (Lasso) on the Farm holding data set. In this context, penalization is used as an automatic variable selection tool: it will shrink the coefficients of some predictors exactly to zero. Select a best penalization parameter using K-fold cross validation. You can find help [here](https://glmnet.stanford.edu/articles/glmnet.html#logistic-regression-family-binomial).
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+# YOUR CODE HERE
+```
+
+### Model assessment
+
+#### Hold-out
+
+Perform a simple Hold-out approach (train/test split) and evaluate ROC / AUC for some `glm()` model specification of your choice (ie. choose manually a subset of variables), you might take inspiration from this [book chapter](https://bradleyboehmke.github.io/HOML/process.html). You can also compare the former Scoring functions already used in the case study (LDA, Naive score, ...).
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+# YOUR CODE HERE
+```
+
+#### K-fold cross validation
+
+Perform k-fold cross validation and for each fold evaluate ROC / AUC for the same models as before.
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
 # YOUR CODE HERE
 ```

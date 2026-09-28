@@ -1,0 +1,200 @@
+---
+title: "Case Study: Part 3: Decision Trees and Gradient Boosting"
+author: "Your NAME"
+bibliography: ../assets/references_intro.bib
+csl: ../assets/apa.csl
+link-citations: true
+format:
+  html:
+    theme: 
+       light: cerulean
+    # theme: darkly
+    # highlight: espresso
+    code-copy: true
+    code-fold: true
+    df-print: paged
+    include-in-header: ../assets/mathjax.html
+    number-sections: true
+    toc: true
+    toc_depth: 3
+    toc_float: yes
+    toc-location: left
+    fontsize: 10pt
+    mainfont: "Helvetica Neue"
+  pdf:
+    number-sections: true
+    toc: true
+    toc_depth: 2
+    toc_float: yes
+execute: 
+  #cache: true
+  warning: false
+fontsize: 11pt
+---
+
+# The Farm holding / Desbois Case Study
+
+## Context
+
+The article from @desbois2008 (available [here](https://csbigs.fr/index.php/csbigs/article/view/351.html) together with a sample data set) presents a complete case study around the detection of financial risks for **farm holdings** in France.
+
+Among other methods, Linear Discriminant Analysis and Logistic Regression (plus a stepwise variable selection procedure) are used. ROC curves are provided to compare the methods.
+
+We will reproduce and extend the Desbois case study throughout this course as a **running example** ("fil rouge"). At each stage, we apply the concepts introduced in the preceding handout.
+
+::: callout-tip
+## What you'll do in this Part 3
+
+Following the concepts from [Handout 3: Decision Trees](../handouts/3_decision_trees.qmd):
+
+1.  Fit various decision trees on Farm holding data using CART algorithm. Understand their main parameters, what prunning means. Assess various trees using resampling methods
+2.  Experiment with Gradient Boosting algorithms. Understand their main parameters, losses used
+
+
+:::
+
+## Data
+
+### Loading
+
+Loading Desbois data and first glimpse at it:
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+
+library(tidyverse)
+# package used to import spss file
+library(foreign)
+
+don_desbois <- read.spss("../data/presentation_data/Agriculture Farm Lending/desbois.sav", to.data.frame = TRUE) %>% as_tibble()
+glimpse(don_desbois)
+```
+
+Replacing for convenience `DIFF` target by factor `Y` with `O` (healthy) or `1` (failing):
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+
+don_desbois <- don_desbois %>%
+    mutate(Y = as.factor(if_else(DIFF=='healthy', 0, 1)), DIFF = NULL,
+           .before = everything())
+
+```
+
+Your turn to play.
+
+## CART Algorithm
+
+Using the Agriculture Farm Lending data set:
+
+-   `CART/rpart` build and plot a decision tree of you choice using `rpart`.
+
+    You can use default parameters, and this way learning them. (see for example 2. Building the tree [here](https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf)
+
+Try to display class probabilities and number of observations per node/leaf (for that explore functions `rpart.plot` or `pdp` from package `rpart.plot` see [vignette](http://www.milbo.org/doc/prp.pdf)).
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+# YOUR CODE HERE
+```
+
+-   Customize the tree plot to show both class probabilities and number of observations per node/leaf.
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+# YOUR CODE HERE
+```
+
+-   Playing with `rpart` parameters (in particular those inside `rpart.control`), fit, plot, then compare a "large/deep" decision tree and a "smaller/shallower" tree in terms of ROC/AUC/prediction on the holdout set.
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+# YOUR CODE HERE
+```
+
+-   Describe in simple terms the output of the `printcp` function (see for example 4. Pruning the tree [here](https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf). You don't have to understand deeply the pruning process but understand what is at stake in the process.
+
+-   Choose an arbitrary terminal number of leafs and prune the tree using the `prune` function.
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+# YOUR CODE HERE
+```
+
+-   Select the optimal `cp` parameter for your tree (you can use a plot) and compare to the "large" and "small" models in terms of AUC.
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+# YOUR CODE HERE
+```
+
+- Compare now the deep/pruned/shallow trees in terms of AUC using a resampling procedure (Hold-out or K-fold CV).
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+# YOUR CODE HERE
+```
+
+## Gradient boosting
+
+Using a gradient boosting package of your choice (`gbm`, `xgboost`), play with number of boosting iterations, weak learner complexity (decision tree depth, min number of observations), learning rate. Compare also logistic loss with exponential loss (adaboost) as in the slides/handouts.
+
+Note that the data at hand is quite small (training set is around 1000 observations).
+
+You can take inspiration from this graph: [here](https://scikit-learn.org/1.5/auto_examples/ensemble/plot_gradient_boosting_regularization.html))
+
+Example usage of `gbm` (more [here](https://cran.r-project.org/web/packages/gbm/vignettes/gbm.pdf), see for example the Figure 3 showing Out-of-sample predictive performance by number of iterations and shrinkage):
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+# YOUR CODE HERE
+# library(gbm)
+# gbm_deg <- gbm(Y~.,
+#            data = YOUR_DATA,
+#            n.trees = N, # number of boosting iterations
+#            distribution = "bernoulli", # loss minimized
+#            interaction.depth = 1, 
+#            /!\ interaction.depth (~#{terminal nodes}+1) <> rpart maxdepth
+#                n.minobsinnode = 1, # comparable to rpart minbucket
+#            shrinkage = 1, # learning rate
+#            bag.fraction = 1) # set at 1 to implement pure boosting 
+#            # (otherwise stochastic boosting, ie mix of boosting and bagging)
+```
+
+Example usage of `xgboost` (more [here]() or [here](https://xgboost.readthedocs.io/en/stable/R-package/xgboostPresentation.html) for the `R` package):
+
+```{r}
+#| echo: true
+#| code-fold: show
+#| warning: false
+# YOUR CODE HERE
+#library(xgboost)
+# xgb_deg <- xgboost(data = as.matrix(YOUR_PREDICTORS),
+#            label = as.vector(YOUR_TARGET),
+#            max.depth = 1, # comparable to rpart maxdepth
+#            eta = 1, # learning rate
+#            nthread = 1,
+#            nrounds = num_tree, # number of boosting iterations
+#             min_child_weight = 0, # similar but not comparable to rpart minbucket
+#             objective = "binary:logistic", # loss minimized
+#             lambda = 0, # set at 0 to avoid L2 penalization
+#             tree_method = "exact") 
+```

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Scoring – M2 D3S/EGR 2026-2027 - II. Logistic regression</title>
+<title>Scoring – M2 D3S/EGR 2026-2027 - II. Logistic Regression</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -161,11 +161,11 @@ div.csl-indent {
   </li>  
         <li>
     <a class="dropdown-item" href="../handouts/2_logistic_regression.html" rel="" target="">
- <span class="dropdown-text">II. Logistic regression</span></a>
+ <span class="dropdown-text">II. Logistic Regression</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../handouts/3_decision_trees.html" rel="" target="">
- <span class="dropdown-text">3_decision_trees</span></a>
+ <span class="dropdown-text">III. Decision Trees and Gradient Boosting</span></a>
   </li>  
     </ul>
   </li>
@@ -184,7 +184,7 @@ div.csl-indent {
   </li>  
         <li>
     <a class="dropdown-item" href="../case_study/3_trees_farm_holding_wo_solution.html" rel="" target="">
- <span class="dropdown-text">3_trees_farm_holding</span></a>
+ <span class="dropdown-text">Case Study: Part 3: Decision Trees and Gradient Boosting</span></a>
   </li>  
     </ul>
   </li>
@@ -199,7 +199,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../handouts/2_logistic_regression.html">Session 2 — Logistic Regression</a></li><li class="breadcrumb-item"><a href="../handouts/2_logistic_regression.html">II. Logistic regression</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../handouts/2_logistic_regression.html">Session 2 — Logistic Regression</a></li><li class="breadcrumb-item"><a href="../handouts/2_logistic_regression.html">II. Logistic Regression</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -246,7 +246,7 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../handouts/2_logistic_regression.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">II. Logistic regression</span></a>
+ <span class="menu-text">II. Logistic Regression</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -269,13 +269,13 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../handouts/3_decision_trees.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">3_decision_trees</span></a>
+ <span class="menu-text">III. Decision Trees and Gradient Boosting</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../case_study/3_trees_farm_holding_wo_solution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">3_trees_farm_holding</span></a>
+ <span class="menu-text">Case Study: Part 3: Decision Trees and Gradient Boosting</span></a>
   </div>
 </li>
       </ul>
@@ -338,7 +338,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">II. Logistic regression</h1>
+<h1 class="title">II. Logistic Regression</h1>
 </div>
 
 
@@ -1601,7 +1601,7 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <hr>
 <p>Additionally versions mixing forward and backward stepwise selection exist. For example adding variables to the model sequentially, in the same way as forward selection then at each step the method tries remove variables that no longer provide a significant improvement in the model fit.</p>
 <div class="cell">
-<details>
+<details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define intercept-only model</span></span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>intercept_only <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> <span class="dv">1</span>, </span>
@@ -1617,7 +1617,7 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 </details>
 </div>
 <div class="cell">
-<details>
+<details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># perform forward stepwise regression based on LRT test and AIC (k=2)</span></span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>forward_aic <span class="ot">&lt;-</span> <span class="fu">step</span>(intercept_only, <span class="at">direction=</span><span class="st">'forward'</span>, <span class="at">test =</span> <span class="st">'LRT'</span>, <span class="at">scope=</span><span class="fu">formula</span>(all), <span class="at">k=</span><span class="dv">2</span>, <span class="at">trace =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1651,7 +1651,7 @@ Y ~ balance + student
 &lt;none&gt;        1571.7 1577.7                 
 + income  1   1571.5 1579.5 0.13677   0.7115</code></pre>
 </div>
-<details>
+<details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(forward_aic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -1679,7 +1679,7 @@ Number of Fisher Scoring iterations: 8</code></pre>
 </div>
 </div>
 <div class="cell">
-<details>
+<details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># perform backward stepwise regression based on LRT test and BIC (k=log(n))</span></span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>backward_bic <span class="ot">&lt;-</span> <span class="fu">step</span>(all, <span class="at">direction=</span><span class="st">'backward'</span>, <span class="at">test =</span> <span class="st">'LRT'</span>, <span class="at">scope=</span><span class="fu">formula</span>(all), <span class="at">k=</span><span class="fu">log</span>(<span class="fu">nrow</span>(default_data)), <span class="at">trace =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1706,7 +1706,7 @@ Y ~ student + balance
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<details>
+<details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(backward_bic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -1753,7 +1753,7 @@ Number of Fisher Scoring iterations: 8</code></pre>
 </div>
 <p>We use here the Mixture data set to give further intuition about Ridge/Lasso penalties:</p>
 <div class="cell">
-<details>
+<details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>data_mixture_example <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/data_mixture_example.rds"</span>)</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">as.numeric</span>(data_mixture_example<span class="sc">$</span>Y)<span class="sc">-</span><span class="dv">1</span></span>
@@ -1803,7 +1803,7 @@ Number of Fisher Scoring iterations: 8</code></pre>
 </div>
 <p>We obtain Ridge Logistic Regression parameters for <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span> as a function of <span class="math inline">\(\lambda\)</span>:</p>
 <div class="cell">
-<details>
+<details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnetUtils) <span class="co"># convenient package allowing to use R formulas instead of glmnet sparse matrix</span></span>
@@ -1828,7 +1828,7 @@ Number of Fisher Scoring iterations: 8</code></pre>
 </div>
 <p>Exercise : implement Newton Raphson or IRLS for Ridge constraint (using either gradient/hessian of penalized likelihood or closed form solution for Linear Model with Ridge)</p>
 <div class="cell">
-<details>
+<details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="do">########## YOUR CODE HERE #####################</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -1861,7 +1861,7 @@ Number of Fisher Scoring iterations: 8</code></pre>
 </div>
 <p>We obtain Lasso Logistic Regression parameters for <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span> as a function of <span class="math inline">\(\lambda\)</span>:</p>
 <div class="cell">
-<details>
+<details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>mixture_lasso <span class="ot">&lt;-</span> glmnetUtils<span class="sc">::</span><span class="fu">glmnet</span>(Y <span class="sc">~</span> ., <span class="at">data=</span>data_mixture_example, <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">alpha=</span><span class="dv">1</span>, <span class="at">lambda.min.ratio=</span><span class="fl">0.000001</span>)</span>
 <span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a></span>

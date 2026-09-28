@@ -453,12 +453,658 @@
 <h2>Outline</h2>
 <div class="extrapad">
 <ul>
+<li>Farm holding case study - solutions</li>
 <li>Model selection</li>
 <li>Model assessment</li>
 <li>A short intro to Decision Trees</li>
 </ul>
 </div>
 </section></section>
+<section>
+<section id="farm-holding-case-study" class="title-slide slide level1 center" data-background-color="#40666e">
+<h1>Farm holding case study</h1>
+
+</section>
+<section id="farm-holding-case-study-1" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="financial-problems-of-farm-holdings">Financial problems of farm holdings</h3>
+<p>The article from <span class="citation" data-cites="desbois2008">Desbois (<a href="#/references" role="doc-biblioref" onclick="">2008</a>)</span> (available <a href="https://csbigs.fr/index.php/csbigs/article/view/351.html">here</a> together with a sample data set) shows a complete case study around the detection of financial risks applicable to farm holdings.</p>
+<p>Among others, Linear Discriminant Analysis and Logistic Regression (plus stepwise variable selection procedure) are used.</p>
+<p>ROC curves are then provided to compare the two methods.</p>
+<p>The original data set uses a format specific to the SPSS software, but is readable from R using the <code>foreign</code> package.</p>
+<p>The case study by D. Desbois will be partly reproduced today and in the next lessons to quickly apply scoring techniques.</p>
+</section>
+<section id="farm-holding-case-study-2" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<p>Loading Farm holding data and first glimpse at it:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># package used to import spss file</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(foreign)</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a>don_desbois <span class="ot">&lt;-</span> <span class="fu">read.spss</span>(<span class="st">"../data/presentation_data/Agriculture Farm Lending/desbois.sav"</span>, <span class="at">to.data.frame =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">glimpse</span>(don_desbois)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,260
+Columns: 30
+$ CNTY    &lt;fct&gt; Eure, Eure, Eure, Eure, Eure, Eure, Eure, Eure, Eure, Eure, Eu…
+$ DIFF    &lt;fct&gt; healthy, healthy, healthy, healthy, healthy, healthy, healthy,…
+$ STATUS  &lt;fct&gt; Entreprise individuelle, Entreprise individuelle, Entreprise i…
+$ HECTARE &lt;dbl&gt; 166, 101, 138, 166, 137, 107, 100, 69, 176, 177, 108, 123, 87,…
+$ ToF     &lt;fct&gt; cereals, cereals, dairy farm, cereals, mixed livestock, cereal…
+$ OWNLAND &lt;fct&gt; yes, no, yes, yes, yes, yes, no, yes, yes, yes, yes, yes, yes,…
+$ AGE     &lt;dbl&gt; 35, 35, 42, 50, 33, 45, 34, 30, 44, 39, 40, 40, 40, 52, 49, 44…
+$ HARVEST &lt;fct&gt; 1988, 1988, 1988, 1988, 1988, 1988, 1988, 1988, 1988, 1988, 19…
+$ r1      &lt;dbl&gt; 0.449, 0.450, 0.332, 0.363, 0.440, 0.306, 0.717, 0.566, 0.145,…
+$ r2      &lt;dbl&gt; 0.622, 0.617, 0.819, 0.733, 0.650, 0.755, 0.320, 0.465, 0.881,…
+$ r3      &lt;dbl&gt; 0.25500, 0.24110, 0.55680, 0.35960, 0.31420, 0.26350, 0.16280,…
+$ r4      &lt;dbl&gt; 0.11450, 0.10840, 0.18510, 0.13050, 0.13820, 0.08055, 0.11680,…
+$ r5      &lt;dbl&gt; 0.334, 0.341, 0.147, 0.232, 0.302, 0.225, 0.601, 0.499, 0.115,…
+$ r6      &lt;dbl&gt; 0.785, 0.518, 0.700, 0.773, 0.846, 0.709, 0.894, 0.863, 0.439,…
+$ r7      &lt;dbl&gt; 0.585, 0.393, 0.310, 0.495, 0.580, 0.523, 0.748, 0.761, 0.348,…
+$ r8      &lt;dbl&gt; 0.20020, 0.12500, 0.38950, 0.27790, 0.26580, 0.18700, 0.14550,…
+$ r11     &lt;dbl&gt; 0.6628, 0.7098, 0.4142, 0.4661, 0.7715, 0.8178, 0.6598, 0.6619…
+$ r12     &lt;dbl&gt; 1.3698, 1.2534, 0.6370, 1.0698, 1.4752, 1.4682, 1.1018, 1.2360…
+$ r14     &lt;dbl&gt; 0.23200, 0.14970, 0.48470, 0.37350, 0.25630, 0.18610, 0.18070,…
+$ r17     &lt;dbl&gt; 0.0884, 0.0671, 0.0445, 0.0621, 0.0489, 0.0243, 0.0352, 0.0879…
+$ r18     &lt;dbl&gt; 0.0694, 0.0348, 0.0311, 0.0480, 0.0414, 0.0173, 0.0315, 0.0758…
+$ r19     &lt;dbl&gt; 0.1660, 0.1360, 0.1030, 0.1080, 0.1270, 0.0652, 0.1290, 0.2400…
+$ r21     &lt;dbl&gt; 0.1340, 0.0802, 0.0890, 0.0851, 0.0838, 0.0390, 0.0784, 0.1630…
+$ r22     &lt;dbl&gt; 0.3219, 0.3133, 0.2945, 0.1909, 0.2567, 0.1472, 0.3211, 0.5170…
+$ r24     &lt;dbl&gt; 0.295, 0.365, 0.166, 0.265, 0.257, 0.191, 0.322, 0.305, 0.180,…
+$ r28     &lt;dbl&gt; 0.475, 0.434, 0.350, 0.475, 0.475, 0.443, 0.401, 0.464, 0.475,…
+$ r30     &lt;dbl&gt; 0.35000, 0.29780, 0.24680, 0.37590, 0.36690, 0.37590, 0.27240,…
+$ r32     &lt;dbl&gt; 0.4313, 0.3989, 0.3187, 0.4313, 0.4313, 0.4257, 0.3697, 0.3886…
+$ r36     &lt;dbl&gt; 0.886, 0.351, 1.300, 1.385, 0.886, 1.316, 0.441, 0.761, 2.147,…
+$ r37     &lt;dbl&gt; 0.572, 0.867, 0.475, 0.470, 0.520, 0.431, 0.803, 0.656, 0.359,…</code></pre>
+</div>
+</div>
+</section>
+<section id="farm-holding-case-study-3" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>Tasks from case study Part 2:</p>
+<ol type="1">
+<li>Empirical odds of Failure (+given that the farmer OWNLAND Yes/No) / Empirical odds ratio</li>
+<li>Fit a Logistic Regression model with an intercept and a single qualitative predictor OWNLAND. Interpret the estimated coefficients</li>
+<li>Fit a Logistic Regression model with all variables in data set, interpret the r17 coefficient</li>
+<li>Compare the Scoring function/Score obtained from Logistic Regression model to the LDA and naive Score built with first component of PCA (Part 1) using a ROC curve</li>
+<li>Confidence intervals / Tests (Wald, LRT) / Goodness of fit</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="farm-holding-case-study-4" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="empirical-odds">Empirical odds</h3>
+<p>Replacing for convenience <code>DIFF</code> target by factor <code>Y</code> with <code>O</code> (healthy) or <code>1</code> (failing):</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>don_desbois <span class="ot">&lt;-</span> don_desbois <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>    <span class="fu">mutate</span>(<span class="at">Y =</span> <span class="fu">as.factor</span>(<span class="fu">if_else</span>(DIFF<span class="sc">==</span><span class="st">'healthy'</span>, <span class="dv">0</span>, <span class="dv">1</span>)), <span class="at">DIFF =</span> <span class="cn">NULL</span>, <span class="at">.before =</span> <span class="fu">everything</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>From the cross tabulation:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">addmargins</span>(<span class="fu">table</span>(<span class="at">Y=</span>don_desbois<span class="sc">$</span>Y, <span class="at">OWNLAND=</span>don_desbois<span class="sc">$</span>OWNLAND))</span>
+<span id="cb4-2"><a href="#cb4-2"></a>tab</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>     OWNLAND
+Y       no  yes  Sum
+  0    378  275  653
+  1    386  221  607
+  Sum  764  496 1260</code></pre>
+</div>
+</div>
+<p>we compute empirical odds:</p>
+<ul>
+<li><span class="math inline">\(\hat{Odds}(Y=1)=607/653=0.93\)</span></li>
+<li><span class="math inline">\(\hat{Odds}(Y=1 \mid OWNLAND=Yes)=221/275\approx0.8\)</span></li>
+<li><span class="math inline">\(\hat{Odds}(Y=1 \mid OWNLAND=No)=386/378\approx1.02\)</span></li>
+</ul>
+</section>
+<section id="farm-holding-case-study-5" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="empirical-odds-ratio">Empirical odds ratio</h3>
+<p>Empirical odds ratio: <span class="math inline">\(\hat{OR}_{Yes/No}(OWNLAND)= \frac{\frac{221}{275}}{\frac{386}{378}}\approx 0.787\)</span></p>
+<p>Interpretation:</p>
+<ul>
+<li>the odds of failing are multiplied by approx <span class="math inline">\(0.787\)</span> (alternatively divided by approx <span class="math inline">\(1.27\)</span>) in the group of farmers owning their farm compared to farmers not owning their farm.</li>
+<li>the odds of not failing are multiplied by approx <span class="math inline">\(1.27\)</span> (alternatively divided by <span class="math inline">\(0.787\)</span>) in the group of farmers owning their farm compared to farmers not owning their farm</li>
+</ul>
+</section>
+<section id="farm-holding-case-study-6" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="estimated-odds-ratio">Estimated odds ratio</h3>
+<p>We fit model with a single qualitative predictor OWNLAND:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>glm_ownland <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y<span class="sc">~</span>OWNLAND, <span class="at">data=</span>don_desbois, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">summary</span>(glm_ownland)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = Y ~ OWNLAND, family = "binomial", data = don_desbois)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)  
+(Intercept)  0.02094    0.07236   0.289   0.7723  
+OWNLANDyes  -0.23955    0.11575  -2.070   0.0385 *
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1745.1  on 1259  degrees of freedom
+Residual deviance: 1740.8  on 1258  degrees of freedom
+AIC: 1744.8
+
+Number of Fisher Scoring iterations: 3</code></pre>
+</div>
+</div>
+<p>The coefficient estimated for <code>OWNLANDyes</code> is <span class="math inline">\(\beta_{\textrm{OWNLANDyes}}\approx\)</span>-0.24. Hence owning its land decrease odds for default by a factor of <span class="math inline">\({OR}_{yes/no}(\textrm{OWNLAND})=\exp(\beta_{\textrm{OWNLANDyes}})\approx\)</span> 0.787.</p>
+</section>
+<section id="farm-holding-case-study-7" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="fitting-full-model-coefficient-interpretation">Fitting “full” model / Coefficient interpretation</h3>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># we fit a "full" model with all available predictors </span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>glm_full <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y<span class="sc">~</span>., <span class="at">data =</span> don_desbois, <span class="at">family=</span><span class="fu">binomial</span>())</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="fu">summary</span>(glm_full)<span class="sc">$</span>coefficients[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span><span class="sc">:</span><span class="dv">41</span>),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Estimate Std. Error     z value     Pr(&gt;|z|)
+(Intercept)  -6.1630417  5.6505446 -1.09069871 0.2754054795
+r1           26.8546182 11.8063118  2.27459843 0.0229300307
+r2           -0.2710109  4.6817305 -0.05788690 0.9538387174
+r3            3.6126542  2.0988833  1.72122685 0.0852096677
+r4           -6.1415358 11.1384274 -0.55138267 0.5813713811
+r5          -16.8888575 12.1959820 -1.38478866 0.1661171000
+r6           -3.8429330  2.0453875 -1.87882885 0.0602678657
+r7            5.7791763  2.4561087  2.35298066 0.0186236028
+r8           -0.1690818  2.6670165 -0.06339737 0.9494500777
+r11          -3.0377244  2.7622447 -1.09973040 0.2714496039
+r12           3.0018027  1.8969263  1.58245618 0.1135454684
+r14           1.7933278  0.8754576  2.04844615 0.0405163037
+r17          45.3388515 11.9574266  3.79168973 0.0001496258
+r18         -27.5304172 21.8814767 -1.25816085 0.2083335913
+r19           6.9349406 13.6906445  0.50654595 0.6124734394
+r21           0.8319258  4.9038910  0.16964606 0.8652884965
+r22           1.0062094  2.1640714  0.46496130 0.6419591703
+r24           3.0603959  6.9352579  0.44128077 0.6590097474
+r28          -4.7090860 13.9105131 -0.33852712 0.7349659908
+r30           9.6765571 14.3065534  0.67637235 0.4988042693
+r32         -13.4833580 17.5600298 -0.76784368 0.4425800585
+r36           1.7532791  0.5486859  3.19541473 0.0013963004
+r37          -3.9196766  2.2258907 -1.76094749 0.0782472907</code></pre>
+</div>
+</div>
+<p>The estimated coefficient for <code>r17</code> is approx 45.34. An increase of <code>r17</code> by <span class="math inline">\(0.01\)</span> increases odds for default by a factor <span class="math inline">\(\exp(\beta_{r_{17}}\times 1\%)=\)</span> 1.57.</p>
+</section>
+<section id="farm-holding-case-study-8" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="confidence-interval">Confidence interval</h3>
+<p>Confidence interval for <span class="math inline">\(r_{17}\)</span> and <span class="math inline">\(r_{36}\)</span> coefficients at <span class="math inline">\(95\%\)</span> level, using Wald statistics:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">confint.default</span>(glm_full)[<span class="fu">c</span>(<span class="dv">31</span>,<span class="dv">40</span>),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>         2.5 %    97.5 %
+r17 21.9027261 68.774977
+r36  0.6778745  2.828684</code></pre>
+</div>
+</div>
+<p>We can retrieve it manually using coefficient estimate and standard deviation, for <span class="math inline">\(r_{17}\)</span>:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>output <span class="ot">=</span> <span class="fu">summary</span>(glm_full)<span class="sc">$</span>coefficients</span>
+<span id="cb12-2"><a href="#cb12-2"></a>r17_estimate <span class="ot">&lt;-</span> output[<span class="dv">31</span>,<span class="dv">1</span>]</span>
+<span id="cb12-3"><a href="#cb12-3"></a>r17_std_error <span class="ot">&lt;-</span> output[<span class="dv">31</span>,<span class="dv">2</span>]</span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="co"># using 97.5 / 2.5 percentile points for the standard normal (approx +/- 1.96)</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="co"># upper bound for beta(r17) at 95%</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a>upper <span class="ot">&lt;-</span> r17_estimate <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> r17_std_error</span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="co"># lower bound for beta(r17) at 95%</span></span>
+<span id="cb12-8"><a href="#cb12-8"></a>lower <span class="ot">&lt;-</span> r17_estimate <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> r17_std_error</span>
+<span id="cb12-9"><a href="#cb12-9"></a>(r17_confint <span class="ot">&lt;-</span> <span class="fu">c</span>(lower, upper))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 21.90230 68.77541</code></pre>
+</div>
+</div>
+</section>
+<section id="farm-holding-case-study-9" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="wald-test-for-single-predictor">Wald test for single predictor</h3>
+<p>Wald test for predictor <span class="math inline">\(r_{36}\)</span> using <code>glm</code> output table:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>sum_desbois <span class="ot">&lt;-</span> <span class="fu">summary</span>(glm_full)</span>
+<span id="cb14-2"><a href="#cb14-2"></a>sum_desbois<span class="sc">$</span>coefficients[<span class="dv">40</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Estimate Std. Error    z value   Pr(&gt;|z|) 
+ 1.7532791  0.5486859  3.1954147  0.0013963 </code></pre>
+</div>
+</div>
+<p>Performing Wald test with the dedicated routine <code>aod::wald.test</code>:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Testing the r36 coefficient (Terms = 40)</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>aod<span class="sc">::</span><span class="fu">wald.test</span>(<span class="at">b =</span> <span class="fu">coef</span>(glm_full), <span class="at">Sigma =</span> <span class="fu">vcov</span>(glm_full), <span class="at">Terms =</span> <span class="dv">40</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Wald test:
+----------
+
+Chi-squared test:
+X2 = 10.2, df = 1, P(&gt; X2) = 0.0014</code></pre>
+</div>
+</div>
+</section>
+<section id="farm-holding-case-study-10" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="wald-test-for-single-predictor-1">Wald test for single predictor</h3>
+<p>Performing Wald test with the dedicated routine <code>car::Anova</code>:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Testing all variables, extracting r36</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>car<span class="sc">::</span><span class="fu">Anova</span>(glm_full, <span class="at">type=</span><span class="dv">3</span>, <span class="at">test.statistic=</span><span class="st">"Wald"</span>)[<span class="dv">29</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type III tests)
+
+Response: Y
+    Df  Chisq Pr(&gt;Chisq)   
+r36  1 10.211   0.001396 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="farm-holding-case-study-11" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="wald-test-for-single-predictor-2">Wald test for single predictor</h3>
+<p>Performing Wald test “manually”:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Extracting fitted coefficients(beta)/standard errors (from hessian matrix)</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>beta_r17 <span class="ot">&lt;-</span> sum_desbois<span class="sc">$</span>coefficients[<span class="dv">40</span>,<span class="dv">1</span>]</span>
+<span id="cb20-3"><a href="#cb20-3"></a>std_err_r17 <span class="ot">&lt;-</span> sum_desbois<span class="sc">$</span>coefficients[<span class="dv">40</span>,<span class="dv">2</span>]</span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="co"># Wald statistics (chi-squared with 1 df)</span></span>
+<span id="cb20-5"><a href="#cb20-5"></a>wald <span class="ot">&lt;-</span> (beta_r17 <span class="sc">/</span> std_err_r17) <span class="sc">^</span> <span class="dv">2</span></span>
+<span id="cb20-6"><a href="#cb20-6"></a><span class="dv">1</span><span class="sc">-</span><span class="fu">pchisq</span>(wald, <span class="at">df =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0013963</code></pre>
+</div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Equivalent Z-test or Student test (two-tailed, standard normal)</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="co"># z_val &lt;- beta_r17 / std_err_r17</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a>z_val <span class="ot">&lt;-</span> sum_desbois<span class="sc">$</span>coefficients[<span class="dv">40</span>,<span class="dv">3</span>]</span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pnorm</span>(<span class="fu">abs</span>(z_val)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0013963</code></pre>
+</div>
+</div>
+</section>
+<section id="farm-holding-case-study-12" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="likelihood-ratio-test-for-single-predictor">Likelihood Ratio test for single predictor</h3>
+<p>Likelihood Ratio test for predictor <span class="math inline">\(r_{36}\)</span> using dedicated <code>anova</code> function. To perform such test we have to fit two nested model (the “full” one, and a nested one having removed predictor <span class="math inline">\(r_{36}\)</span>):</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># using anova on two models (with/without  r36)</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a>glm_wo_r36 <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y<span class="sc">~</span>., <span class="at">data =</span> don_desbois <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>r36), <span class="at">family=</span><span class="fu">binomial</span>())</span>
+<span id="cb24-3"><a href="#cb24-3"></a><span class="fu">anova</span>(glm_wo_r36, glm_full, <span class="at">test=</span> <span class="st">"LRT"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: Y ~ CNTY + STATUS + HECTARE + ToF + OWNLAND + AGE + HARVEST + 
+    r1 + r2 + r3 + r4 + r5 + r6 + r7 + r8 + r11 + r12 + r14 + 
+    r17 + r18 + r19 + r21 + r22 + r24 + r28 + r30 + r32 + r37
+Model 2: Y ~ CNTY + STATUS + HECTARE + ToF + OWNLAND + AGE + HARVEST + 
+    r1 + r2 + r3 + r4 + r5 + r6 + r7 + r8 + r11 + r12 + r14 + 
+    r17 + r18 + r19 + r21 + r22 + r24 + r28 + r30 + r32 + r36 + 
+    r37
+  Resid. Df Resid. Dev Df Deviance Pr(&gt;Chi)   
+1      1220     496.06                        
+2      1219     486.24  1   9.8239 0.001723 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># Manually, building the statisitcs using model deviances:</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>LRT <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">2</span> <span class="sc">*</span> (<span class="fu">logLik</span>(glm_wo_r36)<span class="sc">-</span><span class="fu">logLik</span>(glm_full))</span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="co"># Then using chisq(df=1) density/quantiles to get p-value:</span></span>
+<span id="cb26-4"><a href="#cb26-4"></a>pval <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(LRT, <span class="at">df =</span> <span class="dv">1</span>)</span>
+<span id="cb26-5"><a href="#cb26-5"></a>scales<span class="sc">::</span><span class="fu">scientific</span>(pval, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1.72e-03"</code></pre>
+</div>
+</div>
+</section>
+<section id="farm-holding-case-study-13" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="fitting-a-reduced-model-based-on-9-financial-ratios">Fitting a “reduced” model based on 9 financial ratios</h3>
+<p>We fit a “reduced” model with a subset <span class="math inline">\(\{r_2,\dots,r_{36}\}\)</span> of financial ratios as in the Farm holding case study Table 7:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>glm_reduced <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y<span class="sc">~</span>r2<span class="sc">+</span>r3<span class="sc">+</span>r7<span class="sc">+</span>r14<span class="sc">+</span>r17<span class="sc">+</span>r18<span class="sc">+</span>r21<span class="sc">+</span>r32<span class="sc">+</span>r36, <span class="at">data=</span>don_desbois, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2"></a><span class="fu">summary</span>(glm_reduced)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = Y ~ r2 + r3 + r7 + r14 + r17 + r18 + r21 + r32 + 
+    r36, family = "binomial", data = don_desbois)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  -3.4203     1.2834  -2.665  0.00770 ** 
+r2           -5.2156     1.2108  -4.307 1.65e-05 ***
+r3            5.8347     1.2487   4.673 2.97e-06 ***
+r7            2.9003     0.9530   3.043  0.00234 ** 
+r14           2.1470     0.4777   4.494 6.98e-06 ***
+r17          45.6847     9.6836   4.718 2.38e-06 ***
+r18         -24.6368     9.1127  -2.704  0.00686 ** 
+r21           1.7335     1.9481   0.890  0.37355    
+r32          -5.0215     1.8907  -2.656  0.00791 ** 
+r36           0.4494     0.3558   1.263  0.20661    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1745.1  on 1259  degrees of freedom
+Residual deviance:  691.3  on 1250  degrees of freedom
+AIC: 711.3
+
+Number of Fisher Scoring iterations: 8</code></pre>
+</div>
+</div>
+</section>
+<section id="farm-holding-case-study-14" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="fitting-a-smaller-model">Fitting a “smaller” model</h3>
+<p>We fit a “smaller” model with <span class="math inline">\(r_{17}, r_{21}, r_{36}\)</span> removed from model specification:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>glm_smaller <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y<span class="sc">~</span>r2<span class="sc">+</span>r3<span class="sc">+</span>r7<span class="sc">+</span>r14<span class="sc">+</span>r18<span class="sc">+</span>r32, <span class="at">data=</span>don_desbois, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb30-2"><a href="#cb30-2"></a><span class="fu">summary</span>(glm_smaller)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = Y ~ r2 + r3 + r7 + r14 + r18 + r32, family = "binomial", 
+    data = don_desbois)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  0.07013    0.78460   0.089   0.9288    
+r2          -3.67666    0.68144  -5.395 6.84e-08 ***
+r3           2.14845    0.91865   2.339   0.0194 *  
+r7           0.53120    0.48806   1.088   0.2764    
+r14          2.48322    0.40417   6.144 8.05e-10 ***
+r18         15.23322    3.61215   4.217 2.47e-05 ***
+r32         -6.44443    1.10585  -5.828 5.62e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1745.05  on 1259  degrees of freedom
+Residual deviance:  716.22  on 1253  degrees of freedom
+AIC: 730.22
+
+Number of Fisher Scoring iterations: 6</code></pre>
+</div>
+</div>
+</section>
+<section id="farm-holding-case-study-15" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="likelihood-ratio-test-for-nested-model-comparison">Likelihood Ratio test for nested model comparison</h3>
+<p>We compare the two models using a likelihood ratio test (LRT):</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="fu">anova</span>(glm_smaller, glm_reduced, <span class="at">test=</span> <span class="st">"LRT"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: Y ~ r2 + r3 + r7 + r14 + r18 + r32
+Model 2: Y ~ r2 + r3 + r7 + r14 + r17 + r18 + r21 + r32 + r36
+  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+1      1253     716.22                          
+2      1250     691.30  3   24.918 1.606e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>“reduced” model provides a statistically significant improvement over “smaller” model (<span class="math inline">\(\chi^2(3) = 24.92, p &lt; 0.001\)</span>). Keeping <span class="math inline">\(r_{17}, r_{21}, r_{36}\)</span> reduces residual deviance by <span class="math inline">\(24.9\)</span> points for only 3 additional degrees of freedom, justifying the more complex model according to the LRT.</p>
+</section>
+<section id="farm-holding-case-study-16" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="scoring-functions-comparison-with-roc-curves">Scoring functions comparison with ROC curves</h3>
+<p>Below we compare, using the whole training set (bad pratice), the Scoring functions obtained with Logistic Regression (“full” and “reduced” models), with the LDA fitted in Part 1 (using same predictors as the “reduced” model) and the naive Score built with first principal component of PCA:</p>
+
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
+<section id="farm-holding-case-study-17" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="hosmer-lemeshow-test-goodness-of-fit-calibration">Hosmer-Lemeshow test (Goodness of fit / Calibration)</h3>
+<p>We perform a Hosmer-Lemeshow test for the “reduced” model using <code>glmtoolbox::hltest</code>.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>glmtoolbox<span class="sc">::</span><span class="fu">hltest</span>(glm_reduced)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   The Hosmer-Lemeshow goodness-of-fit test
+
+ Group Size Observed   Expected
+     1  126        1   1.346430
+     2  126        2   3.757197
+     3  126       12   8.158044
+     4  126       12  15.719354
+     5  126       29  33.949947
+     6  126       78  70.051978
+     7  126      101 102.985583
+     8  126      123 120.212024
+     9  126      124 124.922359
+    10  126      125 125.897084
+
+         Statistic =  17.13541 
+degrees of freedom =  8 
+           p-value =  0.02873 </code></pre>
+</div>
+</div>
+<p>Here the p-value for a chi-squared statistic of <span class="math inline">\(H\approx17.14\)</span> with <span class="math inline">\(df=Q-2=8\)</span> is <span class="math inline">\(p\approx0.029\)</span> which is well bellow the usual levels (eg <span class="math inline">\(0.05\)</span>), so that the null hypothesis is rejected, goodness of fit is not acceptable according to the H&amp;L test. NB: the Hosmer Lemeshow test might flag differences that are not practically meaningful, in particular it is known to be sensitive to sample size and how bins are defined.</p>
+</section>
+<section id="farm-holding-case-study-18" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="hosmer-lemeshow-test-goodness-of-fit-calibration-1">Hosmer-Lemeshow test (Goodness of fit / Calibration)</h3>
+<p>We perform a Hosmer-Lemeshow test for the “smaller” model using <code>glmtoolbox::hltest</code>.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>glmtoolbox<span class="sc">::</span><span class="fu">hltest</span>(glm_smaller)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   The Hosmer-Lemeshow goodness-of-fit test
+
+ Group Size Observed   Expected
+     1  126        2   2.133884
+     2  126        2   4.474375
+     3  126        9   8.558707
+     4  126       16  16.779084
+     5  126       31  34.286477
+     6  126       75  68.358227
+     7  126      102 101.547437
+     8  126      122 119.976126
+     9  126      123 124.987002
+    10  126      125 125.898680
+
+         Statistic =  15.96794 
+degrees of freedom =  8 
+           p-value =  0.042841 </code></pre>
+</div>
+</div>
+<p>Here the p-value for a chi-squared statistic of <span class="math inline">\(H\approx15.96\)</span> with <span class="math inline">\(df=Q-2=8\)</span> is <span class="math inline">\(p\approx0.043\)</span> which is just bellow the usual levels (eg <span class="math inline">\(0.05\)</span>), so that the null hypothesis is again rejected, goodness of fit is not acceptable according to the H&amp;L test.</p>
+</section>
+<section id="farm-holding-case-study-19" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="hosmer-lemeshow-test">Hosmer-Lemeshow test</h3>
+<p>We roughly tweak the model (in particular winsorizing the financial ratios to cope with outliers):</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>glm_wins <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> OWNLAND <span class="sc">+</span> STATUS <span class="sc">+</span> HECTARE <span class="sc">+</span> r1 <span class="sc">+</span> r3 <span class="sc">+</span> r8 <span class="sc">+</span> r12 <span class="sc">+</span> r14 <span class="sc">+</span> r17 <span class="sc">+</span> r28 <span class="sc">+</span> r36, </span>
+<span id="cb38-2"><a href="#cb38-2"></a>                <span class="at">data =</span> don_desbois <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3"></a>                 <span class="fu">mutate</span>(<span class="fu">across</span>(r1<span class="sc">:</span>r37, <span class="sc">~</span> DescTools<span class="sc">::</span><span class="fu">Winsorize</span>(.x , <span class="fu">quantile</span>(.x, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))))),</span>
+<span id="cb38-4"><a href="#cb38-4"></a>                 <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb38-5"><a href="#cb38-5"></a>glmtoolbox<span class="sc">::</span><span class="fu">hltest</span>(glm_wins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   The Hosmer-Lemeshow goodness-of-fit test
+
+ Group Size Observed    Expected
+     1  126        1   0.5991086
+     2  126        1   2.0973501
+     3  126        6   5.8186179
+     4  126       10  12.4152464
+     5  126       38  31.9601248
+     6  126       73  75.4234837
+     7  126      106 106.0840084
+     8  126      121 121.5204443
+     9  126      125 125.1692360
+    10  126      126 125.9123799
+
+         Statistic =  3.28939 
+degrees of freedom =  8 
+           p-value =  0.91491 </code></pre>
+</div>
+</div>
+<p>Here the p-value for a chi-squared statistic of <span class="math inline">\(H\approx3.29\)</span> with <span class="math inline">\(df=Q-2=8\)</span> is <span class="math inline">\(p\approx0.91\)</span> which is above the usual levels (eg <span class="math inline">\(0.05\)</span>), so that the null hypothesis is not rejected, goodness of fit is acceptable according to the H&amp;L test.</p>
+</section>
+<section id="farm-holding-case-study-20" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="calibrationreliability-plot">Calibration/Reliability Plot</h3>
+<p>We prepare the coordinates for the Calibration Plot of the “reduced” model: binning modelled/fitted probabilities (10 Groups), then averaging the fitted and observed probabilities in these groups.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>check_default_prob <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">cbind</span>(<span class="at">fitted=</span>glm_reduced<span class="sc">$</span>fitted.values,</span>
+<span id="cb40-2"><a href="#cb40-2"></a>                                      <span class="at">Y =</span> don_desbois <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Y =</span> <span class="fu">if_else</span>(Y <span class="sc">==</span> <span class="st">"1"</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(Y)))</span>
+<span id="cb40-3"><a href="#cb40-3"></a><span class="co"># This is roughly what Hosmer Lemeshow test uses to build its statistic:                                        </span></span>
+<span id="cb40-4"><a href="#cb40-4"></a>(calibration_data <span class="ot">&lt;-</span> check_default_prob <span class="sc">%&gt;%</span></span>
+<span id="cb40-5"><a href="#cb40-5"></a>  <span class="fu">mutate</span>(<span class="at">bins_prob =</span> <span class="fu">cut</span>(fitted, <span class="at">breaks =</span> <span class="fu">quantile</span>(fitted,<span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.10</span>)), <span class="at">include.lowest =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb40-6"><a href="#cb40-6"></a>  <span class="fu">group_by</span>(bins_prob) <span class="sc">%&gt;%</span></span>
+<span id="cb40-7"><a href="#cb40-7"></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb40-8"><a href="#cb40-8"></a>            <span class="at">def =</span> <span class="fu">sum</span>(Y),</span>
+<span id="cb40-9"><a href="#cb40-9"></a>            <span class="at">no_def =</span> n <span class="sc">-</span> def,  </span>
+<span id="cb40-10"><a href="#cb40-10"></a>            <span class="at">predict_prob =</span> <span class="fu">mean</span>(fitted),</span>
+<span id="cb40-11"><a href="#cb40-11"></a>            <span class="at">observed_prob =</span> def<span class="sc">/</span>n,</span>
+<span id="cb40-12"><a href="#cb40-12"></a>            <span class="at">predicted_def =</span> n<span class="sc">*</span>predict_prob))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 7
+   bins_prob             n   def no_def predict_prob observed_prob predicted_def
+   &lt;fct&gt;             &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;
+ 1 [9.63e-06,0.0181]   126     1    125       0.0107       0.00794          1.35
+ 2 (0.0181,0.044]      126     2    124       0.0298       0.0159           3.76
+ 3 (0.044,0.0902]      126    12    114       0.0647       0.0952           8.16
+ 4 (0.0902,0.176]      126    12    114       0.125        0.0952          15.7 
+ 5 (0.176,0.404]       126    29     97       0.269        0.230           33.9 
+ 6 (0.404,0.7]         126    78     48       0.556        0.619           70.1 
+ 7 (0.7,0.912]         126   101     25       0.817        0.802          103.  
+ 8 (0.912,0.981]       126   123      3       0.954        0.976          120.  
+ 9 (0.981,0.997]       126   124      2       0.991        0.984          125.  
+10 (0.997,1]           126   125      1       0.999        0.992          126.  </code></pre>
+</div>
+</div>
+<p>We get a similar table as the one used by Hosmer-Lemeshow test (10 Groups).</p>
+</section>
+<section id="farm-holding-case-study-21" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="calibrationreliability-plot-1">Calibration/Reliability Plot</h3>
+<p>Although the Hosmer–Lemeshow test rejects the goodness of fit/calibration for the “reduced” model, the calibration plot suggests deviations remain limited across the full range and could be acceptable for practical use:</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>(calib_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(calibration_data, <span class="fu">aes</span>(<span class="at">x =</span> predict_prob, <span class="at">y =</span> observed_prob)) <span class="sc">+</span></span>
+<span id="cb42-2"><a href="#cb42-2"></a>      <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb42-3"><a href="#cb42-3"></a>      <span class="fu">geom_abline</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+
+</div>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-23-1.png" width="960" class="r-stretch"></section>
+<section id="farm-holding-case-study-22" class="slide level2 smaller">
+<h2>Farm holding case study</h2>
+<h3 id="calibration-plot">Calibration Plot</h3>
+<p>The model built using winsorized variables shows a better calibration:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a>check_default_prob <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">cbind</span>(<span class="at">fitted=</span>glm_wins<span class="sc">$</span>fitted.values,</span>
+<span id="cb43-2"><a href="#cb43-2"></a>                                      <span class="at">Y =</span> don_desbois <span class="sc">%&gt;%</span></span>
+<span id="cb43-3"><a href="#cb43-3"></a>                                        <span class="fu">mutate</span>(<span class="at">Y =</span> <span class="fu">if_else</span>(Y <span class="sc">==</span> <span class="st">"1"</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb43-4"><a href="#cb43-4"></a>                                        <span class="fu">pull</span>(Y)))</span>
+<span id="cb43-5"><a href="#cb43-5"></a><span class="co"># This is roughly what Hosmer Lemeshow test uses to build its statistic:                                        </span></span>
+<span id="cb43-6"><a href="#cb43-6"></a>calibration_data <span class="ot">&lt;-</span> check_default_prob <span class="sc">%&gt;%</span></span>
+<span id="cb43-7"><a href="#cb43-7"></a>  <span class="fu">mutate</span>(<span class="at">bins_prob =</span> <span class="fu">cut</span>(fitted, <span class="at">breaks =</span> <span class="fu">quantile</span>(fitted,<span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.10</span>)), <span class="at">include.lowest =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb43-8"><a href="#cb43-8"></a>  <span class="fu">group_by</span>(bins_prob) <span class="sc">%&gt;%</span></span>
+<span id="cb43-9"><a href="#cb43-9"></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb43-10"><a href="#cb43-10"></a>            <span class="at">def =</span> <span class="fu">sum</span>(Y),</span>
+<span id="cb43-11"><a href="#cb43-11"></a>            <span class="at">no_def =</span> n <span class="sc">-</span> def,  </span>
+<span id="cb43-12"><a href="#cb43-12"></a>            <span class="at">predict_prob =</span> <span class="fu">mean</span>(fitted),</span>
+<span id="cb43-13"><a href="#cb43-13"></a>            <span class="at">observed_prob =</span> def<span class="sc">/</span>n,</span>
+<span id="cb43-14"><a href="#cb43-14"></a>            <span class="at">predicted_def =</span> n<span class="sc">*</span>predict_prob)</span>
+<span id="cb43-15"><a href="#cb43-15"></a>(calib_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(calibration_data, <span class="fu">aes</span>(<span class="at">x =</span> predict_prob, <span class="at">y =</span> observed_prob)) <span class="sc">+</span></span>
+<span id="cb43-16"><a href="#cb43-16"></a>      <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb43-17"><a href="#cb43-17"></a>      <span class="fu">geom_abline</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+
+</div>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-24-1.png" width="960" class="r-stretch"></section></section>
 <section>
 <section id="model-selection" class="title-slide slide level1 center" data-background-color="#40666e">
 <h1>Model selection</h1>
@@ -626,7 +1272,7 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <h3 id="penalized-logistic-regression-3">Penalized Logistic Regression</h3>
 <p>Re-using here the 2D Mixture data set from introduction slides to give further intuition about Ridge/Lasso penalties:</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-27-1.png" width="960" class="r-stretch"></section>
 <section id="model-selection-12" class="slide level2 smaller">
 <h2>Model selection</h2>
 <h3 id="ridge">Ridge</h3>
@@ -645,7 +1291,7 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <h3 id="ridge-1">Ridge</h3>
 <p>Log-likelihood of the Logistic Regression (colored levels lines centered around the MLE) for the Mixture data set, adding the Ridge constraint (the circle in black is the boundary <span class="math inline">\(\lVert\beta\rVert_2 \leq t\)</span>) :</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-28-1.png" width="960" class="r-stretch"></section>
 <section id="model-selection-14" class="slide level2 smaller">
 <h2>Model selection</h2>
 <h3 id="ridge---with-r">Ridge - with R</h3>
@@ -653,15 +1299,15 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <div class="cell">
 <details open="">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(glmnet)</span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">library</span>(glmnetUtils) <span class="co"># convenient package allowing to use R formulas instead of glmnet sparse matrix</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="co"># Fitting Logistic Regression model with Ridge (alpha=0) penalty. Small lambda.min.ratio so that penalty is almost zero at start.</span></span>
-<span id="cb2-4"><a href="#cb2-4"></a>mixture_ridge <span class="ot">&lt;-</span> glmnetUtils<span class="sc">::</span><span class="fu">glmnet</span>(Y <span class="sc">~</span> ., <span class="at">data=</span>data_mixture_example, <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">lambda.min.ratio=</span><span class="fl">0.000001</span>)</span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="co"># Extracting coefficients</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a>ridge_result <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">as.matrix</span>(<span class="fu">cbind</span>(mixture_ridge<span class="sc">$</span>lambda, mixture_ridge<span class="sc">$</span>a0, <span class="fu">t</span>(mixture_ridge<span class="sc">$</span>beta))))</span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="fu">names</span>(ridge_result) <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="st">"lambda"</span>, <span class="st">"(Intercept)"</span>, <span class="fu">row.names</span>(mixture_ridge<span class="sc">$</span>beta))</span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="co"># Showing results for very high/low values of lambda</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="fu">bind_rows</span>(ridge_result <span class="sc">%&gt;%</span> <span class="fu">head</span>(),ridge_result <span class="sc">%&gt;%</span> <span class="fu">tail</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="fu">library</span>(glmnet)</span>
+<span id="cb45-2"><a href="#cb45-2"></a><span class="fu">library</span>(glmnetUtils) <span class="co"># convenient package allowing to use R formulas instead of glmnet sparse matrix</span></span>
+<span id="cb45-3"><a href="#cb45-3"></a><span class="co"># Fitting Logistic Regression model with Ridge (alpha=0) penalty. Small lambda.min.ratio so that penalty is almost zero at start.</span></span>
+<span id="cb45-4"><a href="#cb45-4"></a>mixture_ridge <span class="ot">&lt;-</span> glmnetUtils<span class="sc">::</span><span class="fu">glmnet</span>(Y <span class="sc">~</span> ., <span class="at">data=</span>data_mixture_example, <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">lambda.min.ratio=</span><span class="fl">0.000001</span>)</span>
+<span id="cb45-5"><a href="#cb45-5"></a><span class="co"># Extracting coefficients</span></span>
+<span id="cb45-6"><a href="#cb45-6"></a>ridge_result <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">as.matrix</span>(<span class="fu">cbind</span>(mixture_ridge<span class="sc">$</span>lambda, mixture_ridge<span class="sc">$</span>a0, <span class="fu">t</span>(mixture_ridge<span class="sc">$</span>beta))))</span>
+<span id="cb45-7"><a href="#cb45-7"></a><span class="fu">names</span>(ridge_result) <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="st">"lambda"</span>, <span class="st">"(Intercept)"</span>, <span class="fu">row.names</span>(mixture_ridge<span class="sc">$</span>beta))</span>
+<span id="cb45-8"><a href="#cb45-8"></a><span class="co"># Showing results for very high/low values of lambda</span></span>
+<span id="cb45-9"><a href="#cb45-9"></a><span class="fu">bind_rows</span>(ridge_result <span class="sc">%&gt;%</span> <span class="fu">head</span>(),ridge_result <span class="sc">%&gt;%</span> <span class="fu">tail</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 12 × 4
@@ -687,7 +1333,7 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <h3 id="ridge-2">Ridge</h3>
 <p>Ridge Logistic Regression parameters <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span> path as <span class="math inline">\(\lambda\)</span> increases. Starting from the Logistic Regression MLE for <span class="math inline">\(\lambda=0\)</span> and then shrunken “uniformly” towards zero as <span class="math inline">\(\lambda\)</span> increases.</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-30-1.png" width="960" class="r-stretch"></section>
 <section id="model-selection-16" class="slide level2 smaller">
 <h2>Model selection</h2>
 <h3 id="lasso">Lasso</h3>
@@ -704,7 +1350,7 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <h3 id="lasso-1">Lasso</h3>
 <p>Log-likelihood of the Logistic Regression (colored levels lines centered around the MLE) for the Mixture data set, adding the Lasso constraint (the diamond/square in black is the boundary <span class="math inline">\(\lVert\beta\rVert_1 \leq t\)</span>) :</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-31-1.png" width="960" class="r-stretch"></section>
 <section id="model-selection-18" class="slide level2 smaller">
 <h2>Model selection</h2>
 <h3 id="lasso-2">Lasso</h3>
@@ -712,13 +1358,13 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <div class="cell">
 <details open="">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Fitting Logistic Regression model with Lasso (alpha=1) penalty. Small lambda.min.ratio so that penalty is almost zero at start.</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>mixture_lasso <span class="ot">&lt;-</span> glmnetUtils<span class="sc">::</span><span class="fu">glmnet</span>(Y <span class="sc">~</span> ., <span class="at">data=</span>data_mixture_example, <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">alpha=</span><span class="dv">1</span>, <span class="at">lambda.min.ratio=</span><span class="fl">0.000001</span>)</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="co"># Extracting coefficients</span></span>
-<span id="cb4-4"><a href="#cb4-4"></a>lasso_result <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">as.matrix</span>(<span class="fu">cbind</span>(mixture_lasso<span class="sc">$</span>lambda, mixture_lasso<span class="sc">$</span>a0, <span class="fu">t</span>(mixture_lasso<span class="sc">$</span>beta))))</span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="fu">names</span>(lasso_result) <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="st">"lambda"</span>, <span class="st">"(Intercept)"</span>, <span class="fu">row.names</span>(mixture_lasso<span class="sc">$</span>beta))</span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co"># Showing results for very high/low values of lambda</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="fu">bind_rows</span>(lasso_result <span class="sc">%&gt;%</span> <span class="fu">head</span>(), lasso_result <span class="sc">%&gt;%</span> <span class="fu">tail</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="co"># Fitting Logistic Regression model with Lasso (alpha=1) penalty. Small lambda.min.ratio so that penalty is almost zero at start.</span></span>
+<span id="cb47-2"><a href="#cb47-2"></a>mixture_lasso <span class="ot">&lt;-</span> glmnetUtils<span class="sc">::</span><span class="fu">glmnet</span>(Y <span class="sc">~</span> ., <span class="at">data=</span>data_mixture_example, <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">alpha=</span><span class="dv">1</span>, <span class="at">lambda.min.ratio=</span><span class="fl">0.000001</span>)</span>
+<span id="cb47-3"><a href="#cb47-3"></a><span class="co"># Extracting coefficients</span></span>
+<span id="cb47-4"><a href="#cb47-4"></a>lasso_result <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">as.matrix</span>(<span class="fu">cbind</span>(mixture_lasso<span class="sc">$</span>lambda, mixture_lasso<span class="sc">$</span>a0, <span class="fu">t</span>(mixture_lasso<span class="sc">$</span>beta))))</span>
+<span id="cb47-5"><a href="#cb47-5"></a><span class="fu">names</span>(lasso_result) <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="st">"lambda"</span>, <span class="st">"(Intercept)"</span>, <span class="fu">row.names</span>(mixture_lasso<span class="sc">$</span>beta))</span>
+<span id="cb47-6"><a href="#cb47-6"></a><span class="co"># Showing results for very high/low values of lambda</span></span>
+<span id="cb47-7"><a href="#cb47-7"></a><span class="fu">bind_rows</span>(lasso_result <span class="sc">%&gt;%</span> <span class="fu">head</span>(), lasso_result <span class="sc">%&gt;%</span> <span class="fu">tail</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 12 × 4
@@ -744,13 +1390,13 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <h3 id="lasso-3">Lasso</h3>
 <p>Lasso Logistic Regression parameters <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span> path as <span class="math inline">\(\lambda\)</span> increases. Starting from the Logistic Regression MLE for <span class="math inline">\(\lambda=0\)</span> and as <span class="math inline">\(\lambda\)</span> increases and at some point the solution of the constrained optimization is likely to occur at one of the corners of the diamond.</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-33-1.png" width="960" class="r-stretch"></section>
 <section id="model-selection-20" class="slide level2 smaller">
 <h2>Model selection</h2>
 <h3 id="lasso-4">Lasso</h3>
 <p>Stretching the graph a little bit to better show the Lasso path, the <span class="math inline">\(\beta_1\)</span> parameter is the first shrunk to zero:</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-11-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-34-1.png" width="960" class="r-stretch"></section>
 <section id="model-selection-21" class="slide level2 smaller">
 <h2>Model selection</h2>
 <h3 id="penalized-logistic-regression-4">Penalized Logistic Regression</h3>
@@ -781,53 +1427,53 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <h3 id="original-mixture-data-set-d1">Original Mixture data set (d=1)</h3>
 <p>Tried to reproduce results form <span class="citation" data-cites="islr2021">James et al. (<a href="#/references" role="doc-biblioref" onclick="">2021</a>)</span> using Original Mixture data set with higher Bayes error</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-35-1.png" width="960" class="r-stretch"></section>
 <section id="model-assessment-4" class="slide level2 smaller">
 <h2>Model assessment</h2>
 <h3 id="original-mixture-data-set-d2">Original Mixture data set (d=2)</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-36-1.png" width="960" class="r-stretch"></section>
 <section id="model-assessment-5" class="slide level2 smaller">
 <h2>Model assessment</h2>
 <h3 id="original-mixture-mixture-data-set-d3">Original Mixture Mixture data set (d=3)</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-14-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-37-1.png" width="960" class="r-stretch"></section>
 <section id="model-assessment-6" class="slide level2 smaller">
 <h2>Model assessment</h2>
 <h3 id="original-mixture-data-set-d4">Original Mixture data set (d=4)</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-15-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-38-1.png" width="960" class="r-stretch"></section>
 <section id="model-assessment-7" class="slide level2 smaller">
 <h2>Model assessment</h2>
 <h3 id="original-mixture-data-set-d5">Original Mixture data set (d=5)</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-16-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-39-1.png" width="960" class="r-stretch"></section>
 <section id="model-assessment-8" class="slide level2 smaller">
 <h2>Model assessment</h2>
 <h3 id="original-mixture-data-set-d6">Original Mixture data set (d=6)</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-40-1.png" width="960" class="r-stretch"></section>
 <section id="model-assessment-9" class="slide level2 smaller">
 <h2>Model assessment</h2>
 <h3 id="original-mixture-data-set-d7">Original Mixture data set (d=7)</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-41-1.png" width="960" class="r-stretch"></section>
 <section id="model-assessment-10" class="slide level2 smaller">
 <h2>Model assessment</h2>
 <h3 id="original-mixture-data-set-d8">Original Mixture data set (d=8)</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-42-1.png" width="960" class="r-stretch"></section>
 <section id="model-assessment-11" class="slide level2 smaller">
 <h2>Model assessment</h2>
 <h3 id="original-mixture-data-set-d10">Original Mixture data set (d=10)</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-20-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-43-1.png" width="960" class="r-stretch"></section>
 <section id="model-assessment-12" class="slide level2 smaller">
 <h2>Model assessment</h2>
 <h3 id="original-mixture-data-set-misclassification-curve">Original Mixture data set, misclassification curve</h3>
 <p>We plot below the misclassification curve, comparing the misclassification error estimated on a large testing set using the generating distribution (in orange, testing set generated knowing the oracle) with misclassification estimated using a resampling method on the training set (in black, 10-fold Cross Validation, defined later). In our case, we see that misclassification using a resampling method, although optimistic, behaves roughly like misclassification using large testing set:</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-21-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-44-1.png" width="960" class="r-stretch"></section>
 <section id="model-assessment-13" class="slide level2 smaller">
 <h2>Model assessment</h2>
 <h3 id="the-hold-out-approach">The Hold-out approach</h3>
@@ -889,6 +1535,17 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <p>Another variant is to repeat the K-fold CV 5 or 10 times to improve the accuracy of the estimated performance and provide and estimate on its variability.</p>
 <p>This <a href="https://bradleyboehmke.github.io/HOML/process.html">book chapter</a> gives a practical overview on these methods (how to implement it in R) and also gives references discussing their validity and limitations.</p>
 <p>This <a href="https://developer.nvidia.com/blog/the-kaggle-grandmasters-playbook-7-battle-tested-modeling-techniques-for-tabular-data/">recent blog by NVIDIA Kaggle grandmasters</a> advocates resampling techniques (cross-validation) as a foundation for any supervized learning problem.</p>
+</section>
+<section id="model-selection-and-assessment" class="slide level2 smaller">
+<h2>Model selection and assessment</h2>
+<h3 id="exercise">Exercise</h3>
+<div class="extrapad">
+<ul>
+<li>Using the Farm holding data set, select model variables using a forward stepwise procedure. Compare to the case study results</li>
+<li>Perform penalized logistic regression (Lasso) on the data set</li>
+<li>Assess the models introduced before (naive Score, LDA, various Logistic Regression models) using resampling techniques (Hold-out and K-fold Cross Validation)</li>
+</ul>
+</div>
 </section></section>
 <section>
 <section id="a-short-intro-to-decision-trees" class="title-slide slide level1 center" data-background-color="#40666e">
@@ -899,26 +1556,26 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <h2>A short intro to Decision Trees</h2>
 <h3 id="mixture-data-set-logistic-regression">Mixture data set: Logistic Regression</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-22-1.png" width="960" class="r-stretch"><p>The empirical risk on testing set is 0.291.</p>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-45-1.png" width="960" class="r-stretch"><p>The empirical risk on testing set is 0.291.</p>
 </section>
 <section id="a-short-intro-to-decision-trees-2" class="slide level2 smaller">
 <h2>A short intro to Decision Trees</h2>
 <h3 id="toy-example---logistic-regression---binning">Toy example - Logistic Regression - binning</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-23-1.png" width="960" class="r-stretch"><p>The empirical risk on testing set is 0.265.</p>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-46-1.png" width="960" class="r-stretch"><p>The empirical risk on testing set is 0.265.</p>
 </section>
 <section id="a-short-intro-to-decision-trees-3" class="slide level2 smaller">
 <h2>A short intro to Decision Trees</h2>
 <h3 id="toy-example---decision-trees">Toy example - Decision Trees</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-25-1.png" width="960" class="r-stretch"><p>The empirical risk on testing set is 0.247.</p>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-48-1.png" width="960" class="r-stretch"><p>The empirical risk on testing set is 0.247.</p>
 </section>
 <section id="a-short-intro-to-decision-trees-4" class="slide level2 smaller">
 <h2>A short intro to Decision Trees</h2>
 <h3 id="scoring-toy-example---decision-trees">Scoring Toy example - Decision Trees</h3>
 <p>We show below the previously fitted Decision tree:</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-26-1.png" width="960" class="r-stretch"><p>How to fit such a tree? What criterion is used?</p>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-49-1.png" width="960" class="r-stretch"><p>How to fit such a tree? What criterion is used?</p>
 </section>
 <section id="a-short-intro-to-decision-trees-5" class="slide level2 smaller">
 <h2>A short intro to Decision Trees</h2>
@@ -945,44 +1602,44 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <h2>Decision Trees</h2>
 <h3 id="cart-for-mixture-data-set">CART for Mixture data set</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-27-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-50-1.png" width="960" class="r-stretch"></section>
 <section id="a-short-intro-to-decision-trees-7" class="slide level2 smaller">
 <h2>A short intro to Decision Trees</h2>
 <h3 id="cart-for-mixture-data-set-1">CART for Mixture data set</h3>
 <p>Starting from the top of the tree and going down the <code>CART/rpart</code> algorithm splits at each node according to a binary decision.</p>
 <p>It ends up splitting the space into six regions, and then models the output by the mode/majority (classification) or proportion (scoring/probability) of <span class="math inline">\(Y\)</span> in each region:</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-28-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-51-1.png" width="960" class="r-stretch"></section>
 <section id="a-short-intro-to-decision-trees-8" class="slide level2 smaller">
 <h2>A short intro to Decision Trees</h2>
 <h3 id="cart-for-mixture-data-set-2">CART for Mixture data set</h3>
 <p>For example, with the Mixture data, <code>CART/rpart</code> first splits at <span class="math inline">\(x_2=s_1=0.14\)</span>:</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-29-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-52-1.png" width="960" class="r-stretch"></section>
 <section id="a-short-intro-to-decision-trees-9" class="slide level2 smaller">
 <h2>A short intro to Decision Trees</h2>
 <h3 id="cart-for-mixture-data-set-3">CART for Mixture data set</h3>
 <p>Then, the region <span class="math inline">\(x_2 \geq s_1\)</span> is split at <span class="math inline">\(x_1 = s_2 = 2.2\)</span>:</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-30-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-53-1.png" width="960" class="r-stretch"></section>
 <section id="a-short-intro-to-decision-trees-10" class="slide level2 smaller">
 <h2>A short intro to Decision Trees</h2>
 <h3 id="cart-for-mixture-data-set-4">CART for Mixture data set</h3>
 <p>Then, the region <span class="math inline">\(x_2 \geq s_1, \mbox{ } x_1 &gt; s_2\)</span> is split at <span class="math inline">\(x_1 = s_3 = 3.1\)</span>:</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-31-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-54-1.png" width="960" class="r-stretch"></section>
 <section id="a-short-intro-to-decision-trees-11" class="slide level2 smaller">
 <h2>A short intro to Decision Trees</h2>
 <h3 id="cart-for-mixture-data-set-5">CART for Mixture data set</h3>
 <p>And the region <span class="math inline">\(x_2 \geq s_1, \mbox{ } x_1 \leq s_2\)</span> is split at <span class="math inline">\(x_2 = s_4 = 0.98\)</span>:</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-32-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-55-1.png" width="960" class="r-stretch"></section>
 <section id="a-short-intro-to-decision-trees-12" class="slide level2 smaller">
 <h2>A short intro to Decision Trees</h2>
 <h3 id="cart-for-mixture-data-set-6">CART for Mixture data set</h3>
 <p>Finally the region <span class="math inline">\(x_2 \geq s_1, \mbox{ } x_1 \leq s_2, \mbox{ } x_2 &lt; s_4\)</span> is split at <span class="math inline">\(x_1 = s_5 = 1\)</span>. Resulting in <span class="math inline">\(R_1, R_2, . . . , R_6\)</span> shown below:</p>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-33-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-56-1.png" width="960" class="r-stretch"></section>
 <section id="decision-trees-1" class="slide level2 smaller">
 <h2>Decision Trees</h2>
 <h3 id="splitting-criterion">Splitting criterion</h3>
@@ -1000,7 +1657,7 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 <h2>A short intro to Decision Trees</h2>
 <h3 id="impurity-measures">Impurity measures</h3>
 
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-34-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-57-1.png" width="960" class="r-stretch"></section>
 <section id="a-short-intro-to-decision-trees-14" class="slide level2 smaller">
 <h2>A short intro to Decision Trees</h2>
 <h3 id="a-split-example">A split example</h3>
@@ -1013,12 +1670,15 @@ balance       0.005738104 0.000231847  24.749526 3.136911e-135</code></pre>
 1 x2                 0.151    0.142     0.456     0.374      0.5</code></pre>
 </div>
 </div>
-<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-35-1.png" width="960" class="r-stretch"></section>
+<img data-src="2_3_logistic_regression_var_sel_slides_files/figure-revealjs/unnamed-chunk-58-1.png" width="960" class="r-stretch"></section>
 <section id="references" class="slide level2 smaller scrollable">
 <h2>References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-line-spacing="2" role="list">
 <div id="ref-Breiman83" class="csl-entry" role="listitem">
 Breiman, L., Friedman, J. H., Olshen, R. A., &amp; Stone, C. J. and. (1983). <em>Classification and regression trees</em>. Wadsworth.
+</div>
+<div id="ref-desbois2008" class="csl-entry" role="listitem">
+Desbois, D. (2008). <span class="nocase">Introduction to scoring methods: financial problems of farm holdings</span>. <em><span>Case Studies in Business, Industry and Government Statistics</span></em>, <em>2</em>(1), 56–76. <a href="https://hal.science/hal-01172847">https://hal.science/hal-01172847</a>
 </div>
 <div id="ref-hastie2009" class="csl-entry" role="listitem">
 Hastie, T., Tibshirani, R., &amp; Friedman, J. (2009). <em>The elements of statistical learning</em>. Springer New York. <a href="https://doi.org/10.1007/978-0-387-84858-7">https://doi.org/10.1007/978-0-387-84858-7</a>

@@ -290,21 +290,22 @@ div.csl-indent {
   <li><a href="#the-farm-holding-desbois-case-study" id="toc-the-farm-holding-desbois-case-study" class="nav-link active" data-scroll-target="#the-farm-holding-desbois-case-study"><span class="header-section-number">1</span> The Farm holding / Desbois Case Study</a>
   <ul class="collapse">
   <li><a href="#context" id="toc-context" class="nav-link" data-scroll-target="#context"><span class="header-section-number">1.1</span> Context</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">1.2</span> Data</a>
+  <ul class="collapse">
+  <li><a href="#loading" id="toc-loading" class="nav-link" data-scroll-target="#loading"><span class="header-section-number">1.2.1</span> Loading</a></li>
+  <li><a href="#eda" id="toc-eda" class="nav-link" data-scroll-target="#eda"><span class="header-section-number">1.2.2</span> EDA</a></li>
   </ul></li>
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">2</span> Data</a>
+  <li><a href="#logistic-regression" id="toc-logistic-regression" class="nav-link" data-scroll-target="#logistic-regression"><span class="header-section-number">1.3</span> Logistic Regression</a>
   <ul class="collapse">
-  <li><a href="#loading" id="toc-loading" class="nav-link" data-scroll-target="#loading"><span class="header-section-number">2.1</span> Loading</a></li>
-  <li><a href="#eda" id="toc-eda" class="nav-link" data-scroll-target="#eda"><span class="header-section-number">2.2</span> EDA</a></li>
+  <li><a href="#fitting-coefficient-interpretation" id="toc-fitting-coefficient-interpretation" class="nav-link" data-scroll-target="#fitting-coefficient-interpretation"><span class="header-section-number">1.3.1</span> Fitting / Coefficient interpretation</a></li>
+  <li><a href="#confidence-interval" id="toc-confidence-interval" class="nav-link" data-scroll-target="#confidence-interval"><span class="header-section-number">1.3.2</span> Confidence interval</a></li>
+  <li><a href="#tests" id="toc-tests" class="nav-link" data-scroll-target="#tests"><span class="header-section-number">1.3.3</span> Tests</a></li>
   </ul></li>
-  <li><a href="#logistic-regression" id="toc-logistic-regression" class="nav-link" data-scroll-target="#logistic-regression"><span class="header-section-number">3</span> Logistic Regression</a>
+  <li><a href="#model-selection-and-assessment" id="toc-model-selection-and-assessment" class="nav-link" data-scroll-target="#model-selection-and-assessment"><span class="header-section-number">1.4</span> Model selection and assessment</a>
   <ul class="collapse">
-  <li><a href="#fitting-coefficient-interpretation" id="toc-fitting-coefficient-interpretation" class="nav-link" data-scroll-target="#fitting-coefficient-interpretation"><span class="header-section-number">3.1</span> Fitting / Coefficient interpretation</a></li>
-  <li><a href="#confidence-interval" id="toc-confidence-interval" class="nav-link" data-scroll-target="#confidence-interval"><span class="header-section-number">3.2</span> Confidence interval</a></li>
-  <li><a href="#tests" id="toc-tests" class="nav-link" data-scroll-target="#tests"><span class="header-section-number">3.3</span> Tests</a>
-  <ul class="collapse">
-  <li><a href="#wald" id="toc-wald" class="nav-link" data-scroll-target="#wald"><span class="header-section-number">3.3.1</span> Wald</a></li>
-  <li><a href="#lrt" id="toc-lrt" class="nav-link" data-scroll-target="#lrt"><span class="header-section-number">3.3.2</span> LRT</a></li>
-  <li><a href="#goodness-of-fit" id="toc-goodness-of-fit" class="nav-link" data-scroll-target="#goodness-of-fit"><span class="header-section-number">3.3.3</span> Goodness of fit</a></li>
+  <li><a href="#stepwise-logistic-regression" id="toc-stepwise-logistic-regression" class="nav-link" data-scroll-target="#stepwise-logistic-regression"><span class="header-section-number">1.4.1</span> Stepwise Logistic Regression</a></li>
+  <li><a href="#penalized-logistic-regression" id="toc-penalized-logistic-regression" class="nav-link" data-scroll-target="#penalized-logistic-regression"><span class="header-section-number">1.4.2</span> Penalized Logistic Regression</a></li>
+  <li><a href="#model-assessment" id="toc-model-assessment" class="nav-link" data-scroll-target="#model-assessment"><span class="header-section-number">1.4.3</span> Model assessment</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -358,19 +359,25 @@ What you’ll do in this Part 2
 </div>
 <div class="callout-body-container callout-body">
 <p>Following the concepts from <a href="../handouts/2_logistic_regression.html">Handout 2: Logistic Regression</a>:</p>
-<ol type="1">
+<ol start="0" type="1">
 <li>Load and perform EDA on the Desbois dataset. In particular. Understand the 37 financial ratios used as predictors</li>
 <li>Reuse the two scores from Part 1 (naive score based on PCA and LDA) as baselines</li>
-<li>Evaluate it with a ROC curve</li>
+<li>Empirical odds of Failure (+given that the farmer OWNLAND Yes/No) / Empirical odds ratio</li>
+<li>Fit a Logistic Regression model with an intercept and a single qualitative predictor OWNLAND. Interpret the estimated coefficients</li>
+<li>Fit a Logistic Regression model with all variables in data set, interpret the r17 coefficient</li>
+<li>Compare the Scoring function/Score obtained from Logistic Regression model to the LDA and naive Score built with first component of PCA (Part 1) using a ROC curve</li>
+<li>Perform statistical inference : Confidence intervals / Tests on logistic regression models (Wald, LRT) / Goodness of fit</li>
+<li>Select model variables using forward stepwise procedure</li>
+<li>Perform penalized logistic regression (Lasso) on the data set</li>
+<li>Assess the models introduced before (naive Score, LDA, various Logistic Regression models) using resampling techniques (Hold-out and K-fold Cross Validation).</li>
 </ol>
 </div>
 </div>
 </section>
-</section>
-<section id="data" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Data</h1>
-<section id="loading" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="loading"><span class="header-section-number">2.1</span> Loading</h2>
+<section id="data" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="data"><span class="header-section-number">1.2</span> Data</h2>
+<section id="loading" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="loading"><span class="header-section-number">1.2.1</span> Loading</h3>
 <p>Loading Desbois data and first glimpse at it:</p>
 <div class="cell">
 <details open="">
@@ -428,8 +435,8 @@ $ r37     &lt;dbl&gt; 0.572, 0.867, 0.475, 0.470, 0.520, 0.431, 0.803, 0.656, 0.
 </div>
 <p>Your turn to play.</p>
 </section>
-<section id="eda" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="eda"><span class="header-section-number">2.2</span> EDA</h2>
+<section id="eda" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="eda"><span class="header-section-number">1.2.2</span> EDA</h3>
 <p>First Exploratory Data Analysis (EDA) of predictors/output:</p>
 <div class="cell">
 <details open="">
@@ -461,14 +468,14 @@ $ r37     &lt;dbl&gt; 0.572, 0.867, 0.475, 0.470, 0.520, 0.431, 0.803, 0.656, 0.
 <p><img src="../images/hosmer_lemeshow_chd4.png" class="img-fluid"></p>
 </section>
 </section>
-<section id="logistic-regression" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Logistic Regression</h1>
-<section id="fitting-coefficient-interpretation" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="fitting-coefficient-interpretation"><span class="header-section-number">3.1</span> Fitting / Coefficient interpretation</h2>
+<section id="logistic-regression" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="logistic-regression"><span class="header-section-number">1.3</span> Logistic Regression</h2>
+<section id="fitting-coefficient-interpretation" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="fitting-coefficient-interpretation"><span class="header-section-number">1.3.1</span> Fitting / Coefficient interpretation</h3>
 <p>Using Farm holding data, compute (using a table for example): - The empirical odds of failure - The empirical odds of failure given that the farmer owns his land/farm or not</p>
 <p>Compute / interpret the empirical odds ratios (OWNLAND Yes/No)</p>
 <p>Fit a Logistic Regression model with an intercept and a single qualitative predictor OWNLAND. Interpret the estimated coefficient for OWNLAND.</p>
-<p>Fit a Logistic Regression model with all variables in data set, interpret the <code>r17</code> coefficient (in terms of probability and odds of failure):</p>
+<p>Fit a “full” Logistic Regression model with all predictors in data set, interpret the <code>r17</code> coefficient (in terms of probability and odds of failure):</p>
 <div class="cell">
 <details open="">
 <summary>Code</summary>
@@ -483,44 +490,91 @@ $ r37     &lt;dbl&gt; 0.572, 0.867, 0.475, 0.470, 0.520, 0.431, 0.803, 0.656, 0.
 </details>
 </div>
 </section>
-<section id="confidence-interval" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="confidence-interval"><span class="header-section-number">3.2</span> Confidence interval</h2>
-<p>Build a confidence interval for financial ratio <code>r17</code> and <code>r36</code>.</p>
+<section id="confidence-interval" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="confidence-interval"><span class="header-section-number">1.3.2</span> Confidence interval</h3>
+<p>Build a confidence interval for financial ratio <code>r17</code> and <code>r36</code> using estimated coefficients and standard errors.</p>
 </section>
-<section id="tests" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="tests"><span class="header-section-number">3.3</span> Tests</h2>
-<p>Considering the model <code>Y~.</code>, is the effect of variable <code>r36</code> significant? Using Wald test. Using Likelihood Ratio Test.</p>
-<section id="wald" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="wald"><span class="header-section-number">3.3.1</span> Wald</h3>
+<section id="tests" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="tests"><span class="header-section-number">1.3.3</span> Tests</h3>
+<p>Considering the “full” model <code>Y~.</code>, assess the statistical significance of <code>r36</code>? Using Wald test. Using Likelihood Ratio Test.</p>
+<section id="wald-test" class="level4" data-number="1.3.3.1">
+<h4 data-number="1.3.3.1" class="anchored" data-anchor-id="wald-test"><span class="header-section-number">1.3.3.1</span> Wald Test</h4>
 <div class="cell">
-<details>
+<details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
-<section id="lrt" class="level3" data-number="3.3.2">
-<h3 data-number="3.3.2" class="anchored" data-anchor-id="lrt"><span class="header-section-number">3.3.2</span> LRT</h3>
+<section id="lrt-test" class="level4" data-number="1.3.3.2">
+<h4 data-number="1.3.3.2" class="anchored" data-anchor-id="lrt-test"><span class="header-section-number">1.3.3.2</span> LRT Test</h4>
 <div class="cell">
-<details>
+<details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Fit a “large” model with 10 financial ratios (including <code>r17</code> and <code>r36</code>) as predictors. Fit a “smaller” model removing <code>r17</code> and 2/3 additional ratios of your choice. Test using LRT the two model fit, which one would you retain?</p>
+<p>Fit a “large” model with 9/10 financial ratios (including <code>r17</code> and <code>r36</code>) as predictors. Fit a “smaller” model removing <code>r17</code> and 2/3 additional ratios of your choice. Compare using LRT the two model fit, which one would you retain?</p>
 </section>
-<section id="goodness-of-fit" class="level3" data-number="3.3.3">
-<h3 data-number="3.3.3" class="anchored" data-anchor-id="goodness-of-fit"><span class="header-section-number">3.3.3</span> Goodness of fit</h3>
+<section id="goodness-of-fit-tests" class="level4" data-number="1.3.3.3">
+<h4 data-number="1.3.3.3" class="anchored" data-anchor-id="goodness-of-fit-tests"><span class="header-section-number">1.3.3.3</span> Goodness of fit tests</h4>
 <p>Perform a goodness of fit test (Hosmer and Lemeshow) and a calibration plot, compare.</p>
 <div class="cell">
-<details>
+<details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+</section>
+<section id="model-selection-and-assessment" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="model-selection-and-assessment"><span class="header-section-number">1.4</span> Model selection and assessment</h2>
+<section id="stepwise-logistic-regression" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="stepwise-logistic-regression"><span class="header-section-number">1.4.1</span> Stepwise Logistic Regression</h3>
+<p>Use forward stepwise selection based on the AIC criterion to select variables in the Farm holding data set. Compare with results from the article. Do you find the same variables as the author? (Extra, perform the same analysis using LDA/Wilks Lambda forward selection procedure as in the article).</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="penalized-logistic-regression" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="penalized-logistic-regression"><span class="header-section-number">1.4.2</span> Penalized Logistic Regression</h3>
+<p>Perform penalized logistic regression (Lasso) on the Farm holding data set. In this context, penalization is used as an automatic variable selection tool: it will shrink the coefficients of some predictors exactly to zero. Select a best penalization parameter using K-fold cross validation. You can find help <a href="https://glmnet.stanford.edu/articles/glmnet.html#logistic-regression-family-binomial">here</a>.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="model-assessment" class="level3" data-number="1.4.3">
+<h3 data-number="1.4.3" class="anchored" data-anchor-id="model-assessment"><span class="header-section-number">1.4.3</span> Model assessment</h3>
+<section id="hold-out" class="level4" data-number="1.4.3.1">
+<h4 data-number="1.4.3.1" class="anchored" data-anchor-id="hold-out"><span class="header-section-number">1.4.3.1</span> Hold-out</h4>
+<p>Perform a simple Hold-out approach (train/test split) and evaluate ROC / AUC for some <code>glm()</code> model specification of your choice (ie. choose manually a subset of variables), you might take inspiration from this <a href="https://bradleyboehmke.github.io/HOML/process.html">book chapter</a>. You can also compare the former Scoring functions already used in the case study (LDA, Naive score, …).</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="k-fold-cross-validation" class="level4" data-number="1.4.3.2">
+<h4 data-number="1.4.3.2" class="anchored" data-anchor-id="k-fold-cross-validation"><span class="header-section-number">1.4.3.2</span> K-fold cross validation</h4>
+<p>Perform k-fold cross validation and for each fold evaluate ROC / AUC for the same models as before.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
 
 
+</section>
 </section>
 </section>
 </section>
